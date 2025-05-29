@@ -10,58 +10,61 @@
         android:id="@+id/imageView"
         android:layout_width="292dp"
         android:layout_height="267dp"
-        android:layout_marginBottom="76dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText2"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtCorreo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.473"
         app:srcCompat="@drawable/supervision2" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/txtCorreo"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:ems="10"
         android:hint="Ingrese su correo"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="476dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.548" />
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/txtContrasena"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:ems="10"
         android:hint="Ingrese su contraseña"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2"
-        app:layout_constraintVertical_bias="0.369" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCorreo"
+        app:layout_constraintVertical_bias="0.545" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Correo"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText2"
-        app:layout_constraintStart_toStartOf="@+id/editTextText2" />
+        app:layout_constraintBottom_toTopOf="@+id/txtCorreo"
+        app:layout_constraintStart_toStartOf="@+id/txtCorreo" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Contraseña"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText3"
-        app:layout_constraintStart_toStartOf="@+id/editTextText3" />
+        app:layout_constraintBottom_toTopOf="@+id/txtContrasena"
+        app:layout_constraintStart_toStartOf="@+id/txtContrasena" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnLogin"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="156dp"
@@ -72,7 +75,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/lblRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="84dp"
@@ -82,7 +85,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
@@ -93,10 +96,10 @@
         android:layout_marginBottom="124dp"
         android:text="¿No tienes una cuenta?"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintEnd_toStartOf="@+id/lblRegistro"
         app:layout_constraintHorizontal_bias="0.988"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
@@ -105,16 +108,24 @@
         android:layout_height="wrap_content"
         android:text="Inicio Sesión"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="140dp"
-        tools:layout_editor_absoluteY="413dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.446" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/lblRestablecer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="¿Olvidaste la contraseña?"
         android:textColor="#FF2525"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/txtContrasena"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtContrasena"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

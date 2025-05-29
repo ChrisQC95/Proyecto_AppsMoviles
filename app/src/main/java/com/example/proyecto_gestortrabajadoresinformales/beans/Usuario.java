@@ -1,14 +1,14 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.beans;
 
 public class Usuario {
-    private int id;
+    private String id;
     private String nombres;
     private String apellidos;
     private String telefono;
     private String correo;
     private String contrasena;
     private String tipoUsuario;
-    public Usuario(int id, String nombres, String apellidos, String telefono,
+    public Usuario(String id, String nombres, String apellidos, String telefono,
                    String correo, String contrasena, String tipoUsuario) {
         this.id = id;
         this.nombres = nombres;
@@ -18,6 +18,10 @@ public class Usuario {
         this.contrasena = contrasena;
         this.tipoUsuario = tipoUsuario;
     }
+
+    public Usuario() {
+    }
+
     public Usuario(String nombres, String apellidos, String telefono,
                    String correo, String contrasena, String tipoUsuario) {
         this.nombres = nombres;
@@ -27,7 +31,7 @@ public class Usuario {
         this.contrasena = contrasena;
         this.tipoUsuario = tipoUsuario;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -54,7 +58,7 @@ public class Usuario {
     public String getTipoUsuario() {
         return tipoUsuario;
     }
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

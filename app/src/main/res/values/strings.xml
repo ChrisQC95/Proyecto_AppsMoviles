@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Proyecto-GestorTrabajadoresInformales</string>
+
+    <string-array name="tipos_usuario">
+        <item>CLIENTE</item>
+        <item>TRABAJADOR</item>
+    </string-array>
 </resources>
