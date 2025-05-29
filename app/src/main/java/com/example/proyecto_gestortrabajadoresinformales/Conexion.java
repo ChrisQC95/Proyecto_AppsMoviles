@@ -102,7 +102,7 @@ public class Conexion extends SQLiteOpenHelper {
                     + PROPUESTA_DESCRIPCION + " TEXT,"
                     + PROPUESTA_TIPO_SERVICIO_ID + " INTEGER,"
                     + PROPUESTA_DISPONIBILIDAD + " INTEGER DEFAULT 0,"
-                    + PROPUESTA_CALIFICACION_PROMEDIO + " REAL DEFAULT 0,"
+                    + PROPUESTA_CALIFICACION_PROMEDIO + " INTEGER DEFAULT 0,"
                     + "FOREIGN KEY (" + PROPUESTA_USUARIO_ID + ") REFERENCES " + TABLE_USUARIO + "(" + USUARIO_ID + "),"
                     + "FOREIGN KEY (" + PROPUESTA_TIPO_SERVICIO_ID + ") REFERENCES " + TABLE_TIPO_SERVICIO + "(" + TIPO_SERVICIO_ID + ")"
                     + ")";
