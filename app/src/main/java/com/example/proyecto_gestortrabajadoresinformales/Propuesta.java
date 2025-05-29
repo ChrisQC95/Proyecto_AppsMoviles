@@ -9,7 +9,7 @@ public class Propuesta {
     private Integer tipo_servicio;
     private Integer disponibilidad;
     private Integer calificacion;
-
+    private String tipoServicioNombre;
     public Propuesta() {
     }
 
@@ -32,6 +32,18 @@ public class Propuesta {
         this.tipo_servicio = tipo_servicio;
         this.disponibilidad = disponibilidad;
         this.calificacion = calificacion;
+    }
+
+    public Propuesta(Integer id, Integer usuario_id, String titulo, Double precio, String descripcion, Integer tipo_servicio, Integer disponibilidad, Integer calificacion, String tipoServicioNombre) {
+        this.id = id;
+        this.usuario_id = usuario_id;
+        this.titulo = titulo;
+        this.precio = precio;
+        this.descripcion = descripcion;
+        this.tipo_servicio = tipo_servicio;
+        this.disponibilidad = disponibilidad;
+        this.calificacion = calificacion;
+        this.tipoServicioNombre = tipoServicioNombre;
     }
 
     public Integer getId() {
@@ -96,5 +108,23 @@ public class Propuesta {
 
     public void setCalificacion(Integer calificacion) {
         this.calificacion = calificacion;
+    }
+
+    public String getTipoServicioNombre() {
+        return tipoServicioNombre;
+    }
+
+    public void setTipoServicioNombre(String tipoServicioNombre) {
+        this.tipoServicioNombre = tipoServicioNombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Propuesta{" +
+                "id=" + id +
+                ", titulo='" + titulo + '\'' +
+                ", precio=" + precio +
+                ", disponibilidad=" + disponibilidad +
+                '}';
     }
 }
