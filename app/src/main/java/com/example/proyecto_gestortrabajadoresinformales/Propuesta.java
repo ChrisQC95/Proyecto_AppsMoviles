@@ -54,8 +54,14 @@ public class Propuesta {
         this.id = id;
     }
 
-    public Integer getUsuario_id() {
-        return usuario_id;
+    private Integer usuarioId;
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public void setUsuario_id(Integer usuario_id) {
