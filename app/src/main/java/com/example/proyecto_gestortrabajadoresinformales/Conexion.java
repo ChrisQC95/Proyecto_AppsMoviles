@@ -28,27 +28,16 @@ public class Conexion extends SQLiteOpenHelper {
                     + USUARIO_TIPO + " TEXT NOT NULL CHECK (" + USUARIO_TIPO + " IN ('CLIENTE', 'TRABAJADOR'))"
                     + ")";
 
-    // Constantes para la tabla provincia
-    public static final String TABLE_PROVINCIA = "provincia";
-    public static final String PROVINCIA_ID = "id";
-    public static final String PROVINCIA_NOMBRE = "nombre";
-    public static final String CREATE_TABLE_PROVINCIA =
-            "CREATE TABLE " + TABLE_PROVINCIA + "("
-                    + PROVINCIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + PROVINCIA_NOMBRE + " TEXT NOT NULL UNIQUE"
-                    + ")";
+
 
     // Constantes para la tabla distrito
     public static final String TABLE_DISTRITO = "distrito";
     public static final String DISTRITO_ID = "id";
     public static final String DISTRITO_NOMBRE = "nombre";
-    public static final String DISTRITO_PROVINCIA_ID = "provincia_id";
     public static final String CREATE_TABLE_DISTRITO =
             "CREATE TABLE " + TABLE_DISTRITO + "("
                     + DISTRITO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + DISTRITO_NOMBRE + " TEXT NOT NULL,"
-                    + DISTRITO_PROVINCIA_ID + " INTEGER NOT NULL,"
-                    + "FOREIGN KEY (" + DISTRITO_PROVINCIA_ID + ") REFERENCES " + TABLE_PROVINCIA + "(" + PROVINCIA_ID + ")"
+                    + DISTRITO_NOMBRE + " TEXT NOT NULL"
                     + ")";
 
     // Constantes para la tabla perfil
@@ -58,8 +47,7 @@ public class Conexion extends SQLiteOpenHelper {
     public static final String PERFIL_DISTRITO_ID = "distrito_id";
     public static final String PERFIL_ESPECIALIDAD = "especialidad";
     public static final String PERFIL_FOTO = "foto_perfil";
-    // Asumo que tienes una tabla 'area' con una columna 'id'
-    public static final String PERFIL_AREA_ID = "area_id";
+
     public static final String CREATE_TABLE_PERFIL =
             "CREATE TABLE " + TABLE_PERFIL + "("
                     + PERFIL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -67,10 +55,8 @@ public class Conexion extends SQLiteOpenHelper {
                     + PERFIL_DISTRITO_ID + " INTEGER,"
                     + PERFIL_ESPECIALIDAD + " TEXT,"
                     + PERFIL_FOTO + " TEXT,"
-                    + PERFIL_AREA_ID + " INTEGER,"
                     + "FOREIGN KEY (" + PERFIL_USUARIO_ID + ") REFERENCES " + TABLE_USUARIO + "(" + USUARIO_ID + ") ON DELETE CASCADE,"
-                    + "FOREIGN KEY (" + PERFIL_DISTRITO_ID + ") REFERENCES " + TABLE_DISTRITO + "(" + DISTRITO_ID + "),"
-                    + "FOREIGN KEY (" + PERFIL_AREA_ID + ") REFERENCES area(id)" // Asegúrate de que la tabla 'area' exista
+                    + "FOREIGN KEY (" + PERFIL_DISTRITO_ID + ") REFERENCES " + TABLE_DISTRITO + "(" + DISTRITO_ID + ")"
                     + ")";
 
     // Constantes para la tabla tipo_servicio
@@ -151,8 +137,21 @@ public class Conexion extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Ejecuta las sentencias CREATE TABLE aquí
         db.execSQL(CREATE_TABLE_USUARIO);
-        db.execSQL(CREATE_TABLE_PROVINCIA);
         db.execSQL(CREATE_TABLE_DISTRITO);
+        // Insertar distritos por defecto
+        String[] distritos = {
+                "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Cercado de Lima", "Chaclacayo", "Chorrillos",
+                "Cieneguilla", "Comas", "El agustino", "Independencia", "Jesús maría", "La molina", "La victoria",
+                "Lince", "Los olivos", "Lurigancho", "Lurín", "Magdalena del mar", "Miraflores", "Pachacámac",
+                "Pucusana", "Pueblo libre", "Puente piedra", "Punta hermosa", "Punta negra", "Rímac", "San bartolo",
+                "San borja", "San isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis",
+                "San Martin de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa",
+                "Santiago de Surco", "Surquillo", "Villa el Salvador", "Villa Maria del Triunfo"
+        };
+
+        for (String nombre : distritos) {
+            db.execSQL("INSERT INTO " + TABLE_DISTRITO + " (" + DISTRITO_NOMBRE + ") VALUES ('" + nombre + "')");
+        }
         db.execSQL(CREATE_TABLE_PERFIL);
         db.execSQL(CREATE_TABLE_TIPO_SERVICIO);
         db.execSQL(CREATE_TABLE_PROPUESTA);
@@ -170,7 +169,6 @@ public class Conexion extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TIPO_SERVICIO);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERFIL);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRITO);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROVINCIA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USUARIO);
         onCreate(db);
     }
