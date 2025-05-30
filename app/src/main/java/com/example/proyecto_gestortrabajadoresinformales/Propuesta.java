@@ -2,7 +2,7 @@ package com.example.proyecto_gestortrabajadoresinformales;
 
 public class Propuesta {
     private Integer id;
-    private Integer usuario_id;
+    private Integer usuarioId;  // usar solo este
     private String titulo;
     private Double precio;
     private String descripcion;
@@ -10,11 +10,12 @@ public class Propuesta {
     private Integer disponibilidad;
     private Integer calificacion;
     private String tipoServicioNombre;
+
     public Propuesta() {
     }
 
-    public Propuesta(Integer usuario_id, String titulo, Double precio, String descripcion, Integer tipo_servicio, Integer disponibilidad, Integer calificacion) {
-        this.usuario_id = usuario_id;
+    public Propuesta(Integer usuarioId, String titulo, Double precio, String descripcion, Integer tipo_servicio, Integer disponibilidad, Integer calificacion) {
+        this.usuarioId = usuarioId;
         this.titulo = titulo;
         this.precio = precio;
         this.descripcion = descripcion;
@@ -23,27 +24,15 @@ public class Propuesta {
         this.calificacion = calificacion;
     }
 
-    public Propuesta(Integer id, Integer usuario_id, String titulo, Double precio, String descripcion, Integer tipo_servicio, Integer disponibilidad, Integer calificacion) {
+    public Propuesta(Integer id, Integer usuarioId, String titulo, Double precio, String descripcion, Integer tipo_servicio, Integer disponibilidad, Integer calificacion) {
         this.id = id;
-        this.usuario_id = usuario_id;
+        this.usuarioId = usuarioId;
         this.titulo = titulo;
         this.precio = precio;
         this.descripcion = descripcion;
         this.tipo_servicio = tipo_servicio;
         this.disponibilidad = disponibilidad;
         this.calificacion = calificacion;
-    }
-
-    public Propuesta(Integer id, Integer usuario_id, String titulo, Double precio, String descripcion, Integer tipo_servicio, Integer disponibilidad, Integer calificacion, String tipoServicioNombre) {
-        this.id = id;
-        this.usuario_id = usuario_id;
-        this.titulo = titulo;
-        this.precio = precio;
-        this.descripcion = descripcion;
-        this.tipo_servicio = tipo_servicio;
-        this.disponibilidad = disponibilidad;
-        this.calificacion = calificacion;
-        this.tipoServicioNombre = tipoServicioNombre;
     }
 
     public Integer getId() {
@@ -54,18 +43,12 @@ public class Propuesta {
         this.id = id;
     }
 
-    private Integer usuarioId;
-
     public Integer getUsuarioId() {
         return usuarioId;
     }
 
     public void setUsuarioId(Integer usuarioId) {
         this.usuarioId = usuarioId;
-    }
-
-    public void setUsuario_id(Integer usuario_id) {
-        this.usuario_id = usuario_id;
     }
 
     public String getTitulo() {

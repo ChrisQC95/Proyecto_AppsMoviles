@@ -132,4 +132,59 @@ public class PropuestaDAO {
         db.close();
         return id != -1;
     }
+
+    // * MÉTODO QUE FALTA AGREGAR *
+
+    public List<Propuesta> obtenerPropuestasPorUsuarioId(int usuarioId) {
+        List<Propuesta> listaPropuestas = new ArrayList<>();
+        SQLiteDatabase db = adminDB.getReadableDatabase();
+
+        String selection = Conexion.PROPUESTA_USUARIO_ID + " = ?";
+        String[] selectionArgs = { String.valueOf(usuarioId) };
+
+        Cursor cursor = db.query(
+                Conexion.TABLE_PROPUESTA,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_ID));
+                String titulo = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO));
+                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO));
+                String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION));
+                int tipoServicioId = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TIPO_SERVICIO_ID));
+                int disponibilidad = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DISPONIBILIDAD));
+                int calificacionPromedio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO));
+
+                Propuesta propuesta = new Propuesta(id, usuarioId, titulo, precio, descripcion,
+                        tipoServicioId, disponibilidad, calificacionPromedio);
+                listaPropuestas.add(propuesta);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listaPropuestas;
+    }
+    public long actualizarPropuesta(Propuesta propuesta) {
+        SQLiteDatabase db = adminDB.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(Conexion.PROPUESTA_TITULO, propuesta.getTitulo());
+        values.put(Conexion.PROPUESTA_PRECIO, propuesta.getPrecio());
+        values.put(Conexion.PROPUESTA_DESCRIPCION, propuesta.getDescripcion());
+        values.put(Conexion.PROPUESTA_DISPONIBILIDAD, propuesta.getDisponibilidad());
+        String whereClause = Conexion.PROPUESTA_ID + " = ?";
+        String[] whereArgs = { String.valueOf(propuesta.getId()) };
+
+        long resultado = db.update(Conexion.TABLE_PROPUESTA, values, whereClause, whereArgs);
+        db.close();
+        return resultado;
+    }
 }

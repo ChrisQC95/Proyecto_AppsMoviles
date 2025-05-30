@@ -28,8 +28,9 @@
         <activity android:name=".TrabajadorInicioActivity" />
         <activity android:name=".RestablecerActivity" />
         <activity android:name=".PropuestaActivity" />
-        <activity android:name=".PerfilClienteActivity" />
+        <activity android:name=".HistorialActivity" />
         <activity android:name=".PerfilTrabajadorActivity" />
+
 
     </application>
 

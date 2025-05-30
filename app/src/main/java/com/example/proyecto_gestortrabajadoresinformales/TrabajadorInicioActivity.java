@@ -30,6 +30,7 @@ public class TrabajadorInicioActivity extends AppCompatActivity {
         Button btnCrearPropuesta = findViewById(R.id.btnCrearPropuesta);
         btnCrearPropuesta.setOnClickListener(v -> {
             Intent intent = new Intent(TrabajadorInicioActivity.this, PropuestaActivity.class);
+            intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
         });
 
