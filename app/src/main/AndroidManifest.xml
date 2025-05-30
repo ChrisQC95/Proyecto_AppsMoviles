@@ -27,7 +27,9 @@
         <activity android:name=".ClienteInicioActivity" />
         <activity android:name=".TrabajadorInicioActivity" />
         <activity android:name=".RestablecerActivity" />
-        <activity android:name=".consultas.PropuestaActivity" />
+        <activity android:name=".PropuestaActivity" />
+        <activity android:name=".PerfilClienteActivity" />
+        <activity android:name=".PerfilTrabajadorActivity" />
 
     </application>
 

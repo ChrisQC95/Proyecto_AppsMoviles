@@ -1,6 +1,8 @@
 package com.example.proyecto_gestortrabajadoresinformales;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +21,18 @@ public class ClienteInicioActivity extends AppCompatActivity {
         if (usuarioId != null) {
             Conexion conexion = new Conexion(this);
             UsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
-            Usuario usuario = usuarioDAO.obtenerUsuarioPorId(usuarioId); // Ahora este método debe aceptar String
+            Usuario usuario = usuarioDAO.obtenerUsuarioPorId(usuarioId);
 
             TextView txtBienvenida = findViewById(R.id.txtBienvenida);
             txtBienvenida.setText("¡Bienvenido, " + usuario.getNombres() + "!");
+
+            // Botón para continuar editando perfil
+            Button btnPerfil = findViewById(R.id.btnPerfil);
+            btnPerfil.setOnClickListener(v -> {
+                Intent intent = new Intent(ClienteInicioActivity.this, PerfilClienteActivity.class);
+                intent.putExtra("usuarioId", usuarioId);
+                startActivity(intent);
+            });
         }
     }
 }

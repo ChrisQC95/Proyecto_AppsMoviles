@@ -29,7 +29,7 @@
         app:srcCompat="@drawable/contratacion" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/btnPerfil"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"

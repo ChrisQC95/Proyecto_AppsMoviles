@@ -1,13 +1,9 @@
-package com.example.proyecto_gestortrabajadoresinformales.consultas;
+package com.example.proyecto_gestortrabajadoresinformales;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
-import com.example.proyecto_gestortrabajadoresinformales.PropuestaDAO;
-import com.example.proyecto_gestortrabajadoresinformales.R;
 
 public class PropuestaActivity extends AppCompatActivity {
 

@@ -14,7 +14,7 @@ public class UsuarioDAO {
         this.conexion = conexion;
     }
 
-    public boolean insertarUsuario(Usuario usuario) {
+    public long insertarUsuario(Usuario usuario) {
         SQLiteDatabase db = conexion.getWritableDatabase();
 
         if (db != null) {
@@ -26,11 +26,12 @@ public class UsuarioDAO {
             values.put("contrasena", usuario.getContrasena());
             values.put("tipo_usuario", usuario.getTipoUsuario());
 
-            long result = db.insert("usuario", null, values);
+            long idInsertado = db.insert("usuario", null, values);
             db.close();
-            return result != -1;
+
+            return idInsertado;  // Retorna id o -1 si error
         }
-        return false;
+        return -1;
     }
 
     public Usuario obtenerUsuarioPorCredenciales(String correo, String contrasena) {
@@ -89,6 +90,46 @@ public class UsuarioDAO {
             cursor.close();
         }
         db.close();
+        return usuario;
+    }
+
+    public boolean actualizarUsuario(Usuario usuario) {
+        SQLiteDatabase db = conexion.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("nombres", usuario.getNombres());
+        values.put("apellidos", usuario.getApellidos());
+        values.put("telefono", usuario.getTelefono());
+        values.put("correo", usuario.getCorreo());
+        values.put("contrasena", usuario.getContrasena()); // Omitir si no se cambia
+        values.put("tipo_usuario", usuario.getTipoUsuario());
+
+        int filas = db.update("usuario", values, "id = ?", new String[]{usuario.getId()});
+        db.close();
+        return filas > 0;
+    }
+
+    public Usuario obtenerUsuarioPorCorreo(String correo) {
+        SQLiteDatabase db = conexion.getReadableDatabase();
+        Usuario usuario = null;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM usuario WHERE correo = ?",
+                new String[]{correo}
+        );
+
+        if (cursor.moveToFirst()) {
+            usuario = new Usuario();
+            usuario.setId(cursor.getString(cursor.getColumnIndexOrThrow("id")));
+            usuario.setNombres(cursor.getString(cursor.getColumnIndexOrThrow("nombres")));
+            usuario.setApellidos(cursor.getString(cursor.getColumnIndexOrThrow("apellidos")));
+            usuario.setTelefono(cursor.getString(cursor.getColumnIndexOrThrow("telefono")));
+            usuario.setCorreo(cursor.getString(cursor.getColumnIndexOrThrow("correo")));
+            usuario.setContrasena(cursor.getString(cursor.getColumnIndexOrThrow("contrasena")));
+            usuario.setTipoUsuario(cursor.getString(cursor.getColumnIndexOrThrow("tipo_usuario")));
+        }
+        cursor.close();
+        db.close();
+
         return usuario;
     }
 

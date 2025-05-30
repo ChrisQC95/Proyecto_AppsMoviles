@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.proyecto_gestortrabajadoresinformales.beans.Perfil;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.PerfilDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
 
 public class RegistroActivity extends AppCompatActivity {
@@ -76,9 +78,15 @@ public class RegistroActivity extends AppCompatActivity {
         Conexion conexion = new Conexion(this);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
 
-        if (usuarioDAO.insertarUsuario(usuario)) {
+        long nuevoId = usuarioDAO.insertarUsuario(usuario);
+        if (nuevoId != -1) {
             Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-            // Redirigir a login automáticamente
+
+            // Aquí puedes crear perfil vacío con nuevoId
+            PerfilDAO perfilDAO = new PerfilDAO(new Conexion(this));
+            Perfil perfilNuevo = new Perfil(String.valueOf(nuevoId), "", "", "");
+            perfilDAO.insertarPerfil(perfilNuevo);
+
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {

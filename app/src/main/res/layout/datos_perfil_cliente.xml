@@ -1,87 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/spinner8"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        tools:layout_editor_absoluteX="57dp"
-        tools:layout_editor_absoluteY="555dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="100dp"
+        android:paddingBottom="60dp">
 
     <TextView
-        android:id="@+id/textView41"
+        android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Distrito:"
-        tools:layout_editor_absoluteX="57dp"
-        tools:layout_editor_absoluteY="536dp" />
+        android:layout_marginStart="24dp"
+        android:text="Nombres:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgFoto" />
 
     <EditText
-        android:id="@+id/editTextText17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/txtNombres"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:ems="10"
         android:inputType="text"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="392dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView24"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp" />
 
     <TextView
-        android:id="@+id/textView39"
+        android:id="@+id/textView28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Apellidos:"
-        tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="373dp" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:srcCompat="@drawable/usuario"
-        tools:layout_editor_absoluteX="121dp"
-        tools:layout_editor_absoluteY="103dp" />
-
-    <TextView
-        android:id="@+id/textView38"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nombres:"
-        tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="292dp" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNombres"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp" />
 
     <EditText
-        android:id="@+id/editTextText16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/txtApellidos"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:ems="10"
         android:inputType="text"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="311dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView28"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp" />
 
     <TextView
-        android:id="@+id/textView40"
+        android:id="@+id/textView25"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Provincia:"
-        tools:layout_editor_absoluteX="57dp"
-        tools:layout_editor_absoluteY="450dp" />
+        android:text="Telefono:"
+        app:layout_constraintTop_toBottomOf="@+id/txtApellidos"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/txtTelefono"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/textView25"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/textView30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correo:"
+        app:layout_constraintTop_toBottomOf="@+id/txtTelefono"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/txtCorreo"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView30" />
+
+        <TextView
+            android:id="@+id/textView27"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="Distrito"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtCorreo" />
 
     <Spinner
-        android:id="@+id/spinner7"
+        android:id="@+id/spnDistrito"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        tools:layout_editor_absoluteX="57dp"
-        tools:layout_editor_absoluteY="469dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView27"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp" />
+
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL imagen:"
+            app:layout_constraintTop_toBottomOf="@+id/spnDistrito"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/txtImagen"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView31" />
 
     <Button
-        android:id="@+id/button12"
+        android:id="@+id/btnGuardar"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:text="Guardar Cambios"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="697dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="44dp"
+        android:text="Guardar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtImagen" />
+
+        <ImageView
+            android:id="@+id/imgFoto"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/usuario" />
+        <TextView
+            android:id="@+id/lblMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Volver al menú"
+            android:textColor="#2818FF"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="@+id/btnGuardar"
+            app:layout_constraintTop_toBottomOf="@+id/btnGuardar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

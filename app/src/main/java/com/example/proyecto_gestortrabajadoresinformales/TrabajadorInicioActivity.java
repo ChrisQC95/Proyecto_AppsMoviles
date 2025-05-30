@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
-import com.example.proyecto_gestortrabajadoresinformales.consultas.PropuestaActivity;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
 
 public class TrabajadorInicioActivity extends AppCompatActivity {
@@ -31,6 +30,14 @@ public class TrabajadorInicioActivity extends AppCompatActivity {
         Button btnCrearPropuesta = findViewById(R.id.btnCrearPropuesta);
         btnCrearPropuesta.setOnClickListener(v -> {
             Intent intent = new Intent(TrabajadorInicioActivity.this, PropuestaActivity.class);
+            startActivity(intent);
+        });
+
+        // Botón para continuar editando perfil
+        Button btnPerfil = findViewById(R.id.btnPerfil);
+        btnPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(TrabajadorInicioActivity.this, PerfilTrabajadorActivity.class);
+            intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
         });
     }
