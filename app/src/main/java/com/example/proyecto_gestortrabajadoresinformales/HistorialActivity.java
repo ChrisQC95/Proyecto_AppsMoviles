@@ -11,6 +11,7 @@ import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.PropuestaDAO;
 import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.PropuestaActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class HistorialActivity extends AppCompatActivity {
 
     private TableLayout tableLayout;
     private String usuarioId;
+    private FloatingActionButton fabVerListadoPropuestas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,16 @@ public class HistorialActivity extends AppCompatActivity {
 
         tableLayout = findViewById(R.id.dynamic_table);
         usuarioId = getIntent().getStringExtra("usuarioId");
+        fabVerListadoPropuestas = findViewById(R.id.fabVerListadoPropuestas);
 
         cargarPropuestas();
+        fabVerListadoPropuestas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HistorialActivity.this, ListadoPropuestasActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void cargarPropuestas() {

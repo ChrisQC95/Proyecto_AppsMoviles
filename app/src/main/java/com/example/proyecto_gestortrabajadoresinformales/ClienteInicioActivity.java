@@ -33,6 +33,11 @@ public class ClienteInicioActivity extends AppCompatActivity {
                 intent.putExtra("usuarioId", usuarioId);
                 startActivity(intent);
             });
+            Button btnVerServicios = findViewById(R.id.button8);
+            btnVerServicios.setOnClickListener(v -> {
+                Intent intent = new Intent(ClienteInicioActivity.this, ListadoPropuestasActivity.class);
+                startActivity(intent);
+            });
         }
     }
 }
