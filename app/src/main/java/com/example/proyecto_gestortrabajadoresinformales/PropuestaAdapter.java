@@ -1,5 +1,7 @@
 package com.example.proyecto_gestortrabajadoresinformales; // Ajusta el paquete
 
+import static java.lang.String.valueOf;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Ajusta el paquete si lo pusiste en 'model'
+import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
 
 public class PropuestaAdapter extends RecyclerView.Adapter<PropuestaAdapter.PropuestaViewHolder> {
 
     private List<Propuesta> propuestasList;
-    public PropuestaAdapter(List<Propuesta> propuestasList) {
+    private List<TipoServicio> tiposServicioList;
+    public PropuestaAdapter(List<Propuesta> propuestasList, List<TipoServicio> tiposServicioList) {
         this.propuestasList = propuestasList;
+        this.tiposServicioList = tiposServicioList;
     }
 
     @NonNull
@@ -37,7 +42,19 @@ public class PropuestaAdapter extends RecyclerView.Adapter<PropuestaAdapter.Prop
         holder.textViewCalificacion.setText(String.format("Calificación: %d", (int) Math.round(propuesta.getCalificacion())));
 
         // Ahora mostramos el nombre del tipo de servicio
-        holder.textViewTipoServicio.setText("Tipo de Servicio: " + propuesta.getTipoServicioNombre());
+        // Buscar nombre del tipo de servicio
+        String nombreTipoServicio = obtenerNombreTipoServicioPorId(propuesta.getTipo_servicio());
+        holder.textViewTipoServicio.setText("Tipo de Servicio: " + nombreTipoServicio);
+    }
+
+    private String obtenerNombreTipoServicioPorId(int id) {
+        String idStr = String.valueOf(id);
+        for (TipoServicio tipo : tiposServicioList) {
+            if (tipo.getId().equals(idStr)) {
+                return tipo.getNombre();
+            }
+        }
+        return "Desconocido";
     }
 
     @Override

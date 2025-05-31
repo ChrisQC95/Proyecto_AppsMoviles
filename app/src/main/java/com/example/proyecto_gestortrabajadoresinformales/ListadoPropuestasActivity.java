@@ -40,9 +40,6 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
         recyclerViewPropuestas.setLayoutManager(new LinearLayoutManager(this));
 
         listaPropuestas = new ArrayList<>();
-        propuestaAdapter = new PropuestaAdapter(listaPropuestas);
-        recyclerViewPropuestas.setAdapter(propuestaAdapter);
-
         spinnerTipoServicio = findViewById(R.id.spinnerTipoServicio);
         cargarTiposDeServicioEnSpinner();
 
@@ -60,8 +57,6 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
             }
         });
 
-        // Carga inicial de todas las propuestas disponibles
-        cargarPropuestasDisponiblesFiltradas();
     }
 
     private void cargarTiposDeServicioEnSpinner() {
@@ -84,6 +79,12 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
                         );
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerTipoServicio.setAdapter(adapter);
+                        // 💡 Crear el adapter AQUÍ cuando ya tienes tipos de servicio
+                        propuestaAdapter = new PropuestaAdapter(listaPropuestas, listaTiposServicio);
+                        recyclerViewPropuestas.setAdapter(propuestaAdapter);
+
+                        // Y cargar propuestas ahora que ya tienes todo listo
+                        cargarPropuestasDisponiblesFiltradas();
                     }
                 });
             }
