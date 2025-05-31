@@ -154,6 +154,15 @@ public class Conexion extends SQLiteOpenHelper {
         }
         db.execSQL(CREATE_TABLE_PERFIL);
         db.execSQL(CREATE_TABLE_TIPO_SERVICIO);
+        // Insertar tipos de servicio por defecto
+        String[] tiposServicio = {
+                "Fontanería", "Pintura", "Electricidad", "Carpintería", "Gasfitería",
+                "Jardinería", "Limpieza", "Cerrajería", "Albañilería", "Otros"
+        };
+
+        for (String servicio : tiposServicio) {
+            db.execSQL("INSERT INTO " + TABLE_TIPO_SERVICIO + " (" + TIPO_SERVICIO_NOMBRE + ") VALUES ('" + servicio + "')");
+        }
         db.execSQL(CREATE_TABLE_PROPUESTA);
         db.execSQL(CREATE_TABLE_SOLICITUD);
         db.execSQL(CREATE_TABLE_CALIFICACION);

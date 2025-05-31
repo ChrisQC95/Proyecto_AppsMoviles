@@ -41,7 +41,6 @@ public class PerfilClienteActivity extends AppCompatActivity {
             EditText txtCorreo = findViewById(R.id.txtCorreo);
             Spinner spnDistrito = findViewById(R.id.spnDistrito);
             EditText txtImagen = findViewById(R.id.txtImagen);
-            TextView lblMenu = findViewById(R.id.lblMenu);
 
             DistritoDAO distritoDAO = new DistritoDAO(this);
             List<Distrito> listaDistritos = distritoDAO.obtenerTodosLosDistritos();
@@ -130,9 +129,9 @@ public class PerfilClienteActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(this, "Perfil guardado correctamente", Toast.LENGTH_SHORT).show();
-            });
-            lblMenu.setOnClickListener(v -> {
+
                 Intent intent = new Intent(PerfilClienteActivity.this, ClienteInicioActivity.class);
+                intent.putExtra("usuarioId", usuarioId); // ← importante
                 startActivity(intent);
             });
         }

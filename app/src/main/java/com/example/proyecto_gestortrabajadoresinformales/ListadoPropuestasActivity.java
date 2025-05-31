@@ -10,13 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.TipoServicioDAO;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
-import com.example.proyecto_gestortrabajadoresinformales.PropuestaDAO;
-import com.example.proyecto_gestortrabajadoresinformales.TipoServicio;
-import com.example.proyecto_gestortrabajadoresinformales.TipoServicioDAO;
 
 public class ListadoPropuestasActivity extends AppCompatActivity {
 
@@ -28,7 +26,7 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
     private Spinner spinnerTipoServicio;
     private TipoServicioDAO tipoServicioDAO;
     private List<TipoServicio> listaTiposServicio;
-    private int selectedTipoServicioId = -1; // -1 para "Todos los servicios"
+    private String selectedTipoServicioId = "-1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +68,9 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<TipoServicio> tiposDeServicio = tipoServicioDAO.obtenerTodosLosTiposDeServicio();
+                List<TipoServicio> tiposDeServicio = tipoServicioDAO.obtenerTodosLosTipoServicios();
                 listaTiposServicio = new ArrayList<>();
-                listaTiposServicio.add(new TipoServicio(-1, "Todos los servicios")); // Opción "Todos"
+                listaTiposServicio.add(new TipoServicio("-1", "Todos los servicios")); // Opción "Todos"
                 if (tiposDeServicio != null) {
                     listaTiposServicio.addAll(tiposDeServicio);
                 }
@@ -97,10 +95,10 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final List<Propuesta> propuestas;
-                if (selectedTipoServicioId == -1) {
+                if (selectedTipoServicioId.equals("-1")) {
                     propuestas = propuestaDAO.obtenerPropuestasDisponibles();
                 } else {
-                    propuestas = propuestaDAO.obtenerPropuestasDisponiblesPorTipoServicio(selectedTipoServicioId);
+                    propuestas = propuestaDAO.obtenerPropuestasDisponiblesPorTipoServicio(Integer.parseInt(selectedTipoServicioId));
                 }
                 runOnUiThread(new Runnable() {
                     @Override

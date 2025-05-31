@@ -82,12 +82,20 @@ public class RegistroActivity extends AppCompatActivity {
         if (nuevoId != -1) {
             Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
 
-            // Aquí puedes crear perfil vacío con nuevoId
+            // Crear perfil vacío con nuevoId
             PerfilDAO perfilDAO = new PerfilDAO(new Conexion(this));
             Perfil perfilNuevo = new Perfil(String.valueOf(nuevoId), "", "", "");
             perfilDAO.insertarPerfil(perfilNuevo);
 
-            startActivity(new Intent(this, LoginActivity.class));
+            // Redirigir según tipo de usuario
+            Intent intent;
+            if (usuario.getTipoUsuario().equalsIgnoreCase("CLIENTE")) {
+                intent = new Intent(this, PerfilClienteActivity.class);
+            } else {
+                intent = new Intent(this, PerfilTrabajadorActivity.class);
+            }
+            intent.putExtra("usuarioId", String.valueOf(nuevoId));
+            startActivity(intent);
             finish();
         } else {
             Toast.makeText(this, "Error al registrar usuario", Toast.LENGTH_SHORT).show();

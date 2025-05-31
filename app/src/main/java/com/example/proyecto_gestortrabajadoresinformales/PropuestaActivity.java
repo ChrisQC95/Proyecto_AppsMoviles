@@ -8,6 +8,11 @@ import com.example.proyecto_gestortrabajadoresinformales.HistorialActivity;
 import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.PropuestaDAO;
 import com.example.proyecto_gestortrabajadoresinformales.R;
+import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.TipoServicioDAO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PropuestaActivity extends AppCompatActivity {
     private Integer propuestaId;
@@ -16,6 +21,8 @@ public class PropuestaActivity extends AppCompatActivity {
     private Spinner spinnerDisponibilidad, spinnerTipoServicio; // Add new spinner
     private Button btnGuardar, btnCancelar;
     private String idTrabajador;
+
+    private List<TipoServicio> listaTipoServicios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +47,7 @@ public class PropuestaActivity extends AppCompatActivity {
         spinnerDisponibilidad.setAdapter(adapterDisponibilidad);
 
         // Configure new spinner
-        ArrayAdapter<String> adapterTipoServicio = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
-                new String[]{"Carpintería", "Plomería", "Electricidad", "Jardinería", "Otros"}
-        );
-        adapterTipoServicio.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoServicio.setAdapter(adapterTipoServicio);
+        cargarTipoServiciosDesdeBD();
 
         if (getIntent().hasExtra("modo") && getIntent().getStringExtra("modo").equals("editar")) {
             modoEdicion = true;
@@ -65,7 +67,7 @@ public class PropuestaActivity extends AppCompatActivity {
         txtDescripcion.setText(getIntent().getStringExtra("descripcion"));
         txtPrecio.setText(String.valueOf(getIntent().getDoubleExtra("precio", 0.0)));
         spinnerDisponibilidad.setSelection(getIntent().getIntExtra("disponibilidad", 0));
-        spinnerTipoServicio.setSelection(getIntent().getIntExtra("tipoServicio", 0));
+        spinnerTipoServicio.setSelection(getIntent().getIntExtra("tipoServicio", 0)-1);
     }
 
     private void guardarPropuesta() {
@@ -73,7 +75,7 @@ public class PropuestaActivity extends AppCompatActivity {
         String descripcion = txtDescripcion.getText().toString().trim();
         int disponibilidad = spinnerDisponibilidad.getSelectedItemPosition();
         String precioStr = txtPrecio.getText().toString().trim();
-        int tipoServicio = spinnerTipoServicio.getSelectedItemPosition();
+        int tipoServicio = Integer.parseInt(listaTipoServicios.get(spinnerTipoServicio.getSelectedItemPosition()).getId());
 
         if (titulo.isEmpty() || descripcion.isEmpty() || precioStr.isEmpty()) {
             Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
@@ -123,5 +125,23 @@ public class PropuestaActivity extends AppCompatActivity {
                             " propuesta: " + resultado + " ID: " + usuarioId,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void cargarTipoServiciosDesdeBD() {
+        TipoServicioDAO tipoServicioDAO = new TipoServicioDAO(this);
+        listaTipoServicios = tipoServicioDAO.obtenerTodosLosTipoServicios();
+
+        List<String> nombresServicios = new ArrayList<>();
+        for (TipoServicio tipo : listaTipoServicios) {
+            nombresServicios.add(tipo.getNombre());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                nombresServicios
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoServicio.setAdapter(adapter);
     }
 }

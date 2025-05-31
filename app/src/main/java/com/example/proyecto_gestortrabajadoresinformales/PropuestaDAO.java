@@ -180,6 +180,8 @@ public class PropuestaDAO {
         values.put(Conexion.PROPUESTA_PRECIO, propuesta.getPrecio());
         values.put(Conexion.PROPUESTA_DESCRIPCION, propuesta.getDescripcion());
         values.put(Conexion.PROPUESTA_DISPONIBILIDAD, propuesta.getDisponibilidad());
+        values.put(Conexion.PROPUESTA_TIPO_SERVICIO_ID, propuesta.getTipo_servicio());  // <-- Agregar esta línea
+
         String whereClause = Conexion.PROPUESTA_ID + " = ?";
         String[] whereArgs = { String.valueOf(propuesta.getId()) };
 
@@ -187,4 +189,5 @@ public class PropuestaDAO {
         db.close();
         return resultado;
     }
+
 }

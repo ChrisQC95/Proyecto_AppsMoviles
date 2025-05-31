@@ -41,7 +41,6 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
             Spinner spnDistrito = findViewById(R.id.spnDistrito);
             EditText txtImagen = findViewById(R.id.txtImagen);
             EditText txtEspecialidad = findViewById(R.id.txtEspecialidad);
-            TextView lblMenu = findViewById(R.id.lblMenu);
 
             DistritoDAO distritoDAO = new DistritoDAO(this);
             List<Distrito> listaDistritos = distritoDAO.obtenerTodosLosDistritos();
@@ -133,12 +132,12 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
                 }
 
                 Toast.makeText(this, "Perfil guardado correctamente", Toast.LENGTH_SHORT).show();
-            });
 
-            lblMenu.setOnClickListener(v -> {
                 Intent intent = new Intent(PerfilTrabajadorActivity.this, TrabajadorInicioActivity.class);
+                intent.putExtra("usuarioId", usuarioId);
                 startActivity(intent);
             });
+
         }
 
     }

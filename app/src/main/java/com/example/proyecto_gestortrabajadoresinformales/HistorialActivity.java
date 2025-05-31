@@ -52,6 +52,7 @@ public class HistorialActivity extends AppCompatActivity {
                 intent.putExtra("titulo", propuesta.getTitulo());
                 intent.putExtra("descripcion", propuesta.getDescripcion());
                 intent.putExtra("precio", propuesta.getPrecio());
+                intent.putExtra("tipoServicio", propuesta.getTipo_servicio());
                 intent.putExtra("disponibilidad", propuesta.getDisponibilidad());
                 intent.putExtra("modo", "editar"); // Para indicar que es modo edición
                 startActivity(intent);
