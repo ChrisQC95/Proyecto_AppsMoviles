@@ -30,6 +30,7 @@
         <activity android:name=".PropuestaActivity" />
         <activity android:name=".HistorialActivity" />
         <activity android:name=".PerfilTrabajadorActivity" />
+        <activity android:name=".ListadoPropuestasActivity" />
 
 
     </application>
