@@ -15,7 +15,7 @@ public class PropuestaDAO {
         adminDB = new Conexion(context);
     }
 
-    // Método original
+    // Método original (no modificado)
     public List<Propuesta> obtenerPropuestasDisponibles() {
         List<Propuesta> listaPropuestas = new ArrayList<>();
         SQLiteDatabase db = adminDB.getReadableDatabase();
@@ -55,7 +55,7 @@ public class PropuestaDAO {
         return listaPropuestas;
     }
 
-    // Nuevo método agregado
+    // Método para obtener propuestas por tipo de servicio (no modificado)
     public List<Propuesta> obtenerPropuestasDisponiblesPorTipoServicio(int tipoServicioId) {
         List<Propuesta> listaPropuestas = new ArrayList<>();
         SQLiteDatabase db = adminDB.getReadableDatabase();
@@ -80,6 +80,7 @@ public class PropuestaDAO {
                 String titulo = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO));
                 double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO));
                 String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION));
+                // El tipoServicioId ya lo tenemos por el filtro
                 int disponibilidad = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DISPONIBILIDAD));
                 int calificacionPromedio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO));
 
@@ -93,6 +94,59 @@ public class PropuestaDAO {
         db.close();
         return listaPropuestas;
     }
+
+    // NUEVO MÉTODO: Obtener propuestas disponibles filtradas por Tipo de Servicio Y/O Distrito
+    public List<Propuesta> obtenerPropuestasDisponiblesFiltradas(String tipoServicioId, String distritoId) {
+        List<Propuesta> listaPropuestas = new ArrayList<>();
+        SQLiteDatabase db = adminDB.getReadableDatabase();
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT P.* FROM ")
+                .append(Conexion.TABLE_PROPUESTA).append(" P ")
+                .append(" INNER JOIN ").append(Conexion.TABLE_USUARIO).append(" U ON P.").append(Conexion.PROPUESTA_USUARIO_ID).append(" = U.").append(Conexion.USUARIO_ID)
+                .append(" INNER JOIN ").append(Conexion.TABLE_PERFIL).append(" PER ON U.").append(Conexion.USUARIO_ID).append(" = PER.").append(Conexion.PERFIL_USUARIO_ID)
+                .append(" WHERE P.").append(Conexion.PROPUESTA_DISPONIBILIDAD).append(" = 1");
+
+        List<String> selectionArgsList = new ArrayList<>();
+
+        // Filtrar por Tipo de Servicio
+        if (tipoServicioId != null && !tipoServicioId.equals("-1")) { // "-1" es para "Todos los servicios"
+            query.append(" AND P.").append(Conexion.PROPUESTA_TIPO_SERVICIO_ID).append(" = ?");
+            selectionArgsList.add(tipoServicioId);
+        }
+
+        // Filtrar por Distrito
+        if (distritoId != null && !distritoId.equals("-1")) { // "-1" es para "Todos los distritos"
+            query.append(" AND PER.").append(Conexion.PERFIL_DISTRITO_ID).append(" = ?");
+            selectionArgsList.add(distritoId);
+        }
+
+        String[] selectionArgs = selectionArgsList.toArray(new String[0]);
+
+        Cursor cursor = db.rawQuery(query.toString(), selectionArgs);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_ID));
+                int usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_USUARIO_ID));
+                String titulo = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO));
+                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO));
+                String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION));
+                int tipoServicio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TIPO_SERVICIO_ID));
+                int disponibilidad = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DISPONIBILIDAD));
+                int calificacionPromedio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO));
+
+                Propuesta propuesta = new Propuesta(id, usuarioId, titulo, precio, descripcion,
+                        tipoServicio, disponibilidad, calificacionPromedio);
+                listaPropuestas.add(propuesta);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listaPropuestas;
+    }
+
 
     // NUEVO MÉTODO AGREGADO - NO MODIFICA LO EXISTENTE
     public long insertarPropuesta(Propuesta propuesta) {
@@ -132,8 +186,6 @@ public class PropuestaDAO {
         db.close();
         return id != -1;
     }
-
-    // * MÉTODO QUE FALTA AGREGAR *
 
     public List<Propuesta> obtenerPropuestasPorUsuarioId(int usuarioId) {
         List<Propuesta> listaPropuestas = new ArrayList<>();
@@ -180,7 +232,7 @@ public class PropuestaDAO {
         values.put(Conexion.PROPUESTA_PRECIO, propuesta.getPrecio());
         values.put(Conexion.PROPUESTA_DESCRIPCION, propuesta.getDescripcion());
         values.put(Conexion.PROPUESTA_DISPONIBILIDAD, propuesta.getDisponibilidad());
-        values.put(Conexion.PROPUESTA_TIPO_SERVICIO_ID, propuesta.getTipo_servicio());  // <-- Agregar esta línea
+        values.put(Conexion.PROPUESTA_TIPO_SERVICIO_ID, propuesta.getTipo_servicio());
 
         String whereClause = Conexion.PROPUESTA_ID + " = ?";
         String[] whereArgs = { String.valueOf(propuesta.getId()) };

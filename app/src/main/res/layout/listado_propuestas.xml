@@ -26,10 +26,25 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:background="#E0E0E0" android:padding="8dp"
+        android:background="#E0E0E0"
+        android:padding="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewHeader"
-        app:layout_constraintWidth_percent="0.5" app:layout_constraintEnd_toStartOf="@+id/guidelineMiddle" />
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineMiddle" />
+
+    <Spinner
+        android:id="@+id/spinnerDistrito"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:background="#E0E0E0"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHeader"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintStart_toEndOf="@+id/guidelineMiddle" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineMiddle"
