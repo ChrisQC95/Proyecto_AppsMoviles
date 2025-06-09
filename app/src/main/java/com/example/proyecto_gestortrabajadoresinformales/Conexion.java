@@ -129,9 +129,43 @@ public class Conexion extends SQLiteOpenHelper {
                     + "FOREIGN KEY (" + CALIFICACION_CLIENTE_ID + ") REFERENCES " + TABLE_USUARIO + "(" + USUARIO_ID + ")"
                     + ")";
 
+    // **** INICIO DE LA ADICIÓN DE CÓDIGO ****
+    // Una sola instancia de SQLiteDatabase para toda la aplicación
+    private SQLiteDatabase databaseInstance;
+
+    // Constructor
     public Conexion(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+    // Sobrescribir getWritableDatabase para gestionar la instancia
+    @Override
+    public synchronized SQLiteDatabase getWritableDatabase() {
+        if (databaseInstance == null || !databaseInstance.isOpen()) {
+            databaseInstance = super.getWritableDatabase();
+        }
+        return databaseInstance;
+    }
+
+    // Sobrescribir getReadableDatabase para gestionar la instancia
+    @Override
+    public synchronized SQLiteDatabase getReadableDatabase() {
+        if (databaseInstance == null || !databaseInstance.isOpen()) {
+            databaseInstance = super.getReadableDatabase();
+        }
+        return databaseInstance;
+    }
+
+    // Método para cerrar la base de datos de forma segura
+    @Override
+    public synchronized void close() {
+        if (databaseInstance != null && databaseInstance.isOpen()) {
+            databaseInstance.close();
+            databaseInstance = null; // Limpiar la referencia
+        }
+        super.close(); // Llama al método close() de la clase padre
+    }
+    // **** FIN DE LA ADICIÓN DE CÓDIGO ****
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -181,5 +215,5 @@ public class Conexion extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USUARIO);
         onCreate(db);
     }
-}
 
+}

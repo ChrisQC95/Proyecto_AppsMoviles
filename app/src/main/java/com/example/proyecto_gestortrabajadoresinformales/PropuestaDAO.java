@@ -95,10 +95,11 @@ public class PropuestaDAO {
         return listaPropuestas;
     }
 
-    // NUEVO MÉTODO: Obtener propuestas disponibles filtradas por Tipo de Servicio Y/O Distrito
-    public List<Propuesta> obtenerPropuestasDisponiblesFiltradas(String tipoServicioId, String distritoId) {
+    // MÉTODO MODIFICADO: Obtener propuestas disponibles filtradas por Tipo de Servicio, Distrito Y/O Calificación
+    public List<Propuesta> obtenerPropuestasDisponiblesFiltradas(String tipoServicioId, String distritoId, int calificacionMinima) {
         List<Propuesta> listaPropuestas = new ArrayList<>();
-        SQLiteDatabase db = adminDB.getReadableDatabase();
+        // Obtener la base de datos legible
+        SQLiteDatabase db = adminDB.getReadableDatabase(); // Mantener esta línea
 
         StringBuilder query = new StringBuilder();
         query.append("SELECT P.* FROM ")
@@ -109,41 +110,50 @@ public class PropuestaDAO {
 
         List<String> selectionArgsList = new ArrayList<>();
 
-        // Filtrar por Tipo de Servicio
-        if (tipoServicioId != null && !tipoServicioId.equals("-1")) { // "-1" es para "Todos los servicios"
+        if (tipoServicioId != null && !tipoServicioId.equals("-1")) {
             query.append(" AND P.").append(Conexion.PROPUESTA_TIPO_SERVICIO_ID).append(" = ?");
             selectionArgsList.add(tipoServicioId);
         }
 
-        // Filtrar por Distrito
-        if (distritoId != null && !distritoId.equals("-1")) { // "-1" es para "Todos los distritos"
+        if (distritoId != null && !distritoId.equals("-1")) {
             query.append(" AND PER.").append(Conexion.PERFIL_DISTRITO_ID).append(" = ?");
             selectionArgsList.add(distritoId);
         }
 
-        String[] selectionArgs = selectionArgsList.toArray(new String[0]);
-
-        Cursor cursor = db.rawQuery(query.toString(), selectionArgs);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_ID));
-                int usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_USUARIO_ID));
-                String titulo = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO));
-                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO));
-                String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION));
-                int tipoServicio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TIPO_SERVICIO_ID));
-                int disponibilidad = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DISPONIBILIDAD));
-                int calificacionPromedio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO));
-
-                Propuesta propuesta = new Propuesta(id, usuarioId, titulo, precio, descripcion,
-                        tipoServicio, disponibilidad, calificacionPromedio);
-                listaPropuestas.add(propuesta);
-            } while (cursor.moveToNext());
+        if (calificacionMinima > 0) {
+            query.append(" AND P.").append(Conexion.PROPUESTA_CALIFICACION_PROMEDIO).append(" >= ?");
+            selectionArgsList.add(String.valueOf(calificacionMinima));
         }
 
-        cursor.close();
-        db.close();
+        String[] selectionArgs = selectionArgsList.toArray(new String[0]);
+        Cursor cursor = null; // Inicializar cursor a null para el bloque finally
+
+        try {
+            cursor = db.rawQuery(query.toString(), selectionArgs);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_ID));
+                    int usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_USUARIO_ID));
+                    String titulo = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO));
+                    double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO));
+                    String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION));
+                    int tipoServicio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TIPO_SERVICIO_ID));
+                    int disponibilidad = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DISPONIBILIDAD));
+                    int calificacionPromedio = cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO));
+
+                    Propuesta propuesta = new Propuesta(id, usuarioId, titulo, precio, descripcion,
+                            tipoServicio, disponibilidad, calificacionPromedio);
+                    listaPropuestas.add(propuesta);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            // NO CERRAR db aquí para métodos de lectura si esperas múltiples llamadas rápidas
+            // Si la DB debe cerrarse, hazlo en onDestroy de la Activity o de forma centralizada.
+        }
         return listaPropuestas;
     }
 
@@ -241,5 +251,4 @@ public class PropuestaDAO {
         db.close();
         return resultado;
     }
-
 }
