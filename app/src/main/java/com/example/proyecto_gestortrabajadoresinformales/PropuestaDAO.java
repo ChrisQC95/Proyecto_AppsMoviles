@@ -11,10 +11,10 @@ import java.util.List;
 public class PropuestaDAO {
     private Conexion adminDB;
 
-    public PropuestaDAO(Context context) {
-        adminDB = new Conexion(context);
-    }
 
+    public PropuestaDAO(Conexion conexion) {
+        this.adminDB = conexion;
+    }
     // Método original (no modificado)
     public List<Propuesta> obtenerPropuestasDisponibles() {
         List<Propuesta> listaPropuestas = new ArrayList<>();

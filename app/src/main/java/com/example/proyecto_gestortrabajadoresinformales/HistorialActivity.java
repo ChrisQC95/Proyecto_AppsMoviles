@@ -20,12 +20,18 @@ public class HistorialActivity extends AppCompatActivity {
     private TableLayout tableLayout;
     private String usuarioId;
     private FloatingActionButton fabVerListadoPropuestas;
+    private Conexion conexion;
 
+    // Declara el DAO a nivel de clase
+    private PropuestaDAO propuestaDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historial_propuestas_trabajador);
+        conexion = new Conexion(this);
 
+        // CAMBIO AQUI: Inicializa PropuestaDAO pasándole la instancia de 'conexion'
+        propuestaDAO = new PropuestaDAO(conexion);
         tableLayout = findViewById(R.id.dynamic_table);
         usuarioId = getIntent().getStringExtra("usuarioId");
         fabVerListadoPropuestas = findViewById(R.id.fabVerListadoPropuestas);
@@ -41,7 +47,7 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void cargarPropuestas() {
-        PropuestaDAO propuestaDAO = new PropuestaDAO(this);
+        PropuestaDAO propuestaDAO = new PropuestaDAO(conexion);
         List<Propuesta> propuestas = propuestaDAO.obtenerPropuestasPorUsuarioId(Integer.parseInt(usuarioId));
 
         for (Propuesta propuesta : propuestas) {

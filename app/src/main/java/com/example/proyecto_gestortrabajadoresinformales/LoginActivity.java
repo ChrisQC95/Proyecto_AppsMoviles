@@ -1,5 +1,6 @@
 package com.example.proyecto_gestortrabajadoresinformales;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -67,7 +68,14 @@ public class LoginActivity extends AppCompatActivity {
 
         if (usuario != null) {
             Toast.makeText(this, "Bienvenido, " + usuario.getNombres(), Toast.LENGTH_SHORT).show();
-
+            // *** INICIO DE LA ADICIÓN / MODIFICACIÓN CLAVE ***
+            SharedPreferences sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            // Asegúrate de que usuario.getId() te devuelve un Integer (tu bean Usuario.java)
+            // Y lo convertimos a String para guardarlo en SharedPreferences
+            editor.putString("user_id", String.valueOf(usuario.getId()));
+            editor.apply(); // Aplica los cambios asincrónicamente
+            // *** FIN DE LA ADICIÓN / MODIFICACIÓN CLAVE ***
             // Redirigir según tipo de usuario
             if (usuario.getTipoUsuario().equalsIgnoreCase("CLIENTE")) {
                 Intent intent = new Intent(this, ClienteInicioActivity.class);

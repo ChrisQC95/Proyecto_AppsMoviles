@@ -23,11 +23,17 @@ public class PropuestaActivity extends AppCompatActivity {
     private String idTrabajador;
 
     private List<TipoServicio> listaTipoServicios;
-
+    private Conexion conexion;
+    private PropuestaDAO propuestaDAO;
+    private TipoServicioDAO tipoServicioDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.creacion_propuesta_trabajo);
+
+        conexion = new Conexion(this);
+        propuestaDAO = new PropuestaDAO(conexion);
+        tipoServicioDAO = new TipoServicioDAO(conexion);
 
         txtTitulo = findViewById(R.id.txtTitulo);
         txtDescripcion = findViewById(R.id.txtDescripcion);
@@ -100,7 +106,7 @@ public class PropuestaActivity extends AppCompatActivity {
                 0
         );
 
-        PropuestaDAO propuestaDAO = new PropuestaDAO(this);
+        PropuestaDAO propuestaDAO = new PropuestaDAO(conexion);
         long resultado;
 
         if (modoEdicion) {
@@ -128,7 +134,7 @@ public class PropuestaActivity extends AppCompatActivity {
     }
 
     private void cargarTipoServiciosDesdeBD() {
-        TipoServicioDAO tipoServicioDAO = new TipoServicioDAO(this);
+        TipoServicioDAO tipoServicioDAO = new TipoServicioDAO(conexion);
         listaTipoServicios = tipoServicioDAO.obtenerTodosLosTipoServicios();
 
         List<String> nombresServicios = new ArrayList<>();

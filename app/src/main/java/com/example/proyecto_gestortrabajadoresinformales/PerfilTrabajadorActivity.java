@@ -42,7 +42,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
             EditText txtImagen = findViewById(R.id.txtImagen);
             EditText txtEspecialidad = findViewById(R.id.txtEspecialidad);
 
-            DistritoDAO distritoDAO = new DistritoDAO(this);
+            DistritoDAO distritoDAO = new DistritoDAO(conexion);
             List<Distrito> listaDistritos = distritoDAO.obtenerTodosLosDistritos();
 
             ArrayAdapter<Distrito> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaDistritos);

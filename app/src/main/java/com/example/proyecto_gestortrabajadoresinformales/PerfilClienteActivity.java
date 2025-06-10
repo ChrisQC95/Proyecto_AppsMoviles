@@ -23,11 +23,18 @@ import android.widget.ImageView;
 import java.util.List;
 
 public class PerfilClienteActivity extends AppCompatActivity {
+    private Conexion conexion;
+
+    // Declara el DAO a nivel de clase
+    private DistritoDAO distritoDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.datos_perfil_cliente);
+        conexion = new Conexion(this);
 
+        // CAMBIO AQUI: Inicializa PropuestaDAO pasándole la instancia de 'conexion'
+        distritoDAO = new DistritoDAO(conexion);
         String usuarioId = getIntent().getStringExtra("usuarioId");
 
         if (usuarioId != null) {
@@ -42,7 +49,7 @@ public class PerfilClienteActivity extends AppCompatActivity {
             Spinner spnDistrito = findViewById(R.id.spnDistrito);
             EditText txtImagen = findViewById(R.id.txtImagen);
 
-            DistritoDAO distritoDAO = new DistritoDAO(this);
+            DistritoDAO distritoDAO = new DistritoDAO(conexion);
             List<Distrito> listaDistritos = distritoDAO.obtenerTodosLosDistritos();
 
             ArrayAdapter<Distrito> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaDistritos);

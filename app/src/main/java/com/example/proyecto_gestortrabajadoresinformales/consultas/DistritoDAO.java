@@ -13,8 +13,8 @@ import java.util.List;
 public class DistritoDAO {
     private Conexion conexion;
 
-    public DistritoDAO(Context context) {
-        conexion = new Conexion(context);
+    public DistritoDAO(Conexion conexion) {
+        this.conexion = conexion;
     }
 
     public List<Distrito> obtenerTodosLosDistritos() {
@@ -33,6 +33,30 @@ public class DistritoDAO {
         cursor.close();
         db.close();
         return lista;
+    }
+    public Distrito obtenerDistritoPorId(String idDistrito) {
+        Distrito distrito = null;
+        SQLiteDatabase db = conexion.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT " + Conexion.DISTRITO_ID + ", " + Conexion.DISTRITO_NOMBRE +
+                        " FROM " + Conexion.TABLE_DISTRITO +
+                        " WHERE " + Conexion.DISTRITO_ID + " = ?",
+                new String[]{String.valueOf(idDistrito)}
+        );
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int idIndex = cursor.getColumnIndexOrThrow(Conexion.DISTRITO_ID);
+                int nombreIndex = cursor.getColumnIndexOrThrow(Conexion.DISTRITO_NOMBRE);
+
+                String id = cursor.getString(idIndex);
+                String nombre = cursor.getString(nombreIndex);
+                distrito = new Distrito(id, nombre);
+            }
+            cursor.close();
+        }
+        // ELIMINADO: db.close();
+        return distrito;
     }
 }
 

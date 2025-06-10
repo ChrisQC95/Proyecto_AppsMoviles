@@ -13,10 +13,9 @@ import java.util.List;
 public class TipoServicioDAO {
     private Conexion conexion;
 
-    public TipoServicioDAO(Context context) {
-        conexion = new Conexion(context);
+    public TipoServicioDAO(Conexion conexion) {
+        this.conexion = conexion;
     }
-
     public List<TipoServicio> obtenerTodosLosTipoServicios() {
         List<TipoServicio> lista = new ArrayList<>();
         SQLiteDatabase db = conexion.getReadableDatabase();
@@ -31,7 +30,7 @@ public class TipoServicioDAO {
         }
 
         cursor.close();
-        db.close();
+
         return lista;
     }
 }

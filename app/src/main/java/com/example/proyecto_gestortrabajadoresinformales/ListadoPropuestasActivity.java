@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import android.content.Intent;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Distrito;
 import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.DistritoDAO;
@@ -38,15 +38,16 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
     // Nuevas variables para el filtro por Calificación
     private Spinner spinnerCalificacion;
     private int selectedCalificacion = 0; // 0 para "Todas las calificaciones"
-
+    private Conexion conexion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listado_propuestas);
+        conexion = new Conexion(this);
 
-        propuestaDAO = new PropuestaDAO(this);
-        tipoServicioDAO = new TipoServicioDAO(this);
-        distritoDAO = new DistritoDAO(this);
+        propuestaDAO = new PropuestaDAO(conexion);
+        tipoServicioDAO = new TipoServicioDAO(conexion);
+        distritoDAO = new DistritoDAO(conexion);
 
         recyclerViewPropuestas = findViewById(R.id.recyclerViewPropuestas);
         recyclerViewPropuestas.setLayoutManager(new LinearLayoutManager(this));
@@ -57,10 +58,21 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
         spinnerDistrito = findViewById(R.id.spinnerDistrito);
         spinnerCalificacion = findViewById(R.id.spinnerCalificacion); // Enlazar el nuevo Spinner
 
+        propuestaAdapter = new PropuestaAdapter(listaPropuestas, listaTiposServicio, new PropuestaAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Propuesta propuesta) {
+                // Esto se ejecutará cuando se haga clic en un elemento del RecyclerView
+                Intent intent = new Intent(ListadoPropuestasActivity.this, DetallePropuestaActivity.class);
+                intent.putExtra(DetallePropuestaActivity.EXTRA_PROPUESTA, propuesta); // Propuesta debe ser Parcelable
+                startActivity(intent);
+            }
+        });
+        recyclerViewPropuestas.setAdapter(propuestaAdapter);
+
         cargarTiposDeServicioEnSpinner();
         cargarDistritosEnSpinner();
         cargarCalificacionesEnSpinner(); // Nuevo método para cargar calificaciones
-
+        cargarPropuestasDisponiblesFiltradas();
         // Listener para el Spinner de Tipo de Servicio
         spinnerTipoServicio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -143,9 +155,8 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerTipoServicio.setAdapter(adapter);
 
-                        if (propuestaAdapter == null) {
-                            propuestaAdapter = new PropuestaAdapter(listaPropuestas, listaTiposServicio);
-                            recyclerViewPropuestas.setAdapter(propuestaAdapter);
+                        if (propuestaAdapter != null) { // Siempre es bueno verificar que no sea null
+                            propuestaAdapter.setTiposServicio(listaTiposServicio);
                         }
                     }
                 });
