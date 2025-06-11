@@ -3,7 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
+
+    <ImageButton
+        android:id="@+id/btnVerSolicitudes"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Ver Solicitudes de Trabajo"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_notifications_bell"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/black" />
 
     <TextView
         android:id="@+id/textView37"
@@ -170,5 +185,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.943" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

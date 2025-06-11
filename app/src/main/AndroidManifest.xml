@@ -33,7 +33,7 @@
         <activity android:name=".PerfilClienteActivity" />
         <activity android:name=".ListadoPropuestasActivity" />
         <activity android:name=".DetallePropuestaActivity" />
-
+        <activity android:name=".ListadoSolicitudesTrabajadorActivity" />
     </application>
 
 </manifest>

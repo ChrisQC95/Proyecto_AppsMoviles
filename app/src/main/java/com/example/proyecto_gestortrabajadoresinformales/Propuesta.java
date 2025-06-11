@@ -52,6 +52,11 @@ public class Propuesta implements Parcelable {
         this.tipoServicioNombre = tipoServicioNombre;
     }
 
+    public Propuesta(String titulo, Double precio, String descripcion) {
+        this.titulo = titulo;
+        this.precio = precio;
+        this.descripcion = descripcion;
+    }
 
     // Getters y Setters
     public Integer getId() {
