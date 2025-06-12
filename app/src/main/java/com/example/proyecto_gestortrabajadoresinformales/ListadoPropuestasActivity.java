@@ -129,6 +129,15 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
             btnPropuestasAceptadas.setVisibility(View.GONE); // Oculta y deshabilita el botón
             btnPropuestasAceptadas.setEnabled(false);
         }
+
+        // Agrega este listener para redirigir al listado de solicitudes aceptadas
+        btnPropuestasAceptadas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListadoPropuestasActivity.this, ListadoSolicitudesAceptadasActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     protected void onDestroy() {

@@ -71,9 +71,8 @@ public class LoginActivity extends AppCompatActivity {
             // *** INICIO DE LA ADICIÓN / MODIFICACIÓN CLAVE ***
             SharedPreferences sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            // Asegúrate de que usuario.getId() te devuelve un Integer (tu bean Usuario.java)
-            // Y lo convertimos a String para guardarlo en SharedPreferences
             editor.putString("user_id", String.valueOf(usuario.getId()));
+            editor.putString("user_type", usuario.getTipoUsuario()); // <-- AGREGA ESTA LÍNEA
             editor.apply(); // Aplica los cambios asincrónicamente
             // *** FIN DE LA ADICIÓN / MODIFICACIÓN CLAVE ***
             // Redirigir según tipo de usuario

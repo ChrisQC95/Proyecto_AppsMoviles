@@ -157,5 +157,151 @@ public class SolicitudDAO {
         return count > 0;
     }
 
+    public List<Object[]> obtenerSolicitudesAceptadasPorTrabajador(int idTrabajador) {
+        List<Object[]> solicitudesDetalle = new ArrayList<>();
+        SQLiteDatabase db = conexion.getReadableDatabase();
+        Cursor cursor = null;
+
+        String query = "SELECT " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ID + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_MENSAJE + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TITULO + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_PRECIO + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_DESCRIPCION + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_CALIFICACION_PROMEDIO + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_NOMBRES + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_APELLIDOS + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_TELEFONO + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_CORREO + ", " +
+                Conexion.TABLE_TIPO_SERVICIO + "." + Conexion.TIPO_SERVICIO_NOMBRE + " " +
+                "FROM " + Conexion.TABLE_SOLICITUD + " " +
+                "INNER JOIN " + Conexion.TABLE_PROPUESTA + " ON " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + " = " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_ID + " " +
+                "INNER JOIN " + Conexion.TABLE_USUARIO + " ON " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + " = " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_ID + " " +
+                "INNER JOIN " + Conexion.TABLE_TIPO_SERVICIO + " ON " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TIPO_SERVICIO_ID + " = " +
+                Conexion.TABLE_TIPO_SERVICIO + "." + Conexion.TIPO_SERVICIO_ID + " " +
+                "WHERE " + Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_USUARIO_ID + " = ? " +
+                "AND " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + " = 'ACEPTADA'";
+
+        try {
+            cursor = db.rawQuery(query, new String[]{String.valueOf(idTrabajador)});
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Solicitud solicitud = new Solicitud(
+                            cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ID)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_USUARIO_ID)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_PROPUESTA_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_MENSAJE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ESTADO))
+                    );
+
+                    Propuesta propuesta = new Propuesta(
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO)),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION))
+                    );
+                    propuesta.setCalificacion(cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO)));
+                    propuesta.setTipoServicioNombre(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.TIPO_SERVICIO_NOMBRE)));
+
+                    Usuario cliente = new Usuario();
+                    cliente.setNombres(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_NOMBRES)));
+                    cliente.setApellidos(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_APELLIDOS)));
+                    cliente.setTelefono(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_TELEFONO)));
+                    cliente.setCorreo(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_CORREO)));
+
+                    solicitudesDetalle.add(new Object[]{solicitud, propuesta, cliente});
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e("SolicitudDAO", "Error al obtener solicitudes aceptadas: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return solicitudesDetalle;
+    }
+
+    public List<Object[]> obtenerSolicitudesAceptadasPorCliente(int idCliente) {
+        List<Object[]> solicitudesDetalle = new ArrayList<>();
+        SQLiteDatabase db = conexion.getReadableDatabase();
+        Cursor cursor = null;
+
+        String query = "SELECT " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ID + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_MENSAJE + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TITULO + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_PRECIO + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_DESCRIPCION + ", " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_CALIFICACION_PROMEDIO + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_NOMBRES + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_APELLIDOS + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_TELEFONO + ", " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_CORREO + ", " +
+                Conexion.TABLE_TIPO_SERVICIO + "." + Conexion.TIPO_SERVICIO_NOMBRE + " " +
+                "FROM " + Conexion.TABLE_SOLICITUD + " " +
+                "INNER JOIN " + Conexion.TABLE_PROPUESTA + " ON " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + " = " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_ID + " " +
+                "INNER JOIN " + Conexion.TABLE_USUARIO + " ON " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_USUARIO_ID + " = " +
+                Conexion.TABLE_USUARIO + "." + Conexion.USUARIO_ID + " " +
+                "INNER JOIN " + Conexion.TABLE_TIPO_SERVICIO + " ON " +
+                Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TIPO_SERVICIO_ID + " = " +
+                Conexion.TABLE_TIPO_SERVICIO + "." + Conexion.TIPO_SERVICIO_ID + " " +
+                "WHERE " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + " = ? " +
+                "AND " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + " = 'ACEPTADA'";
+
+        try {
+            cursor = db.rawQuery(query, new String[]{String.valueOf(idCliente)});
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Solicitud solicitud = new Solicitud(
+                            cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ID)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_USUARIO_ID)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_PROPUESTA_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_MENSAJE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ESTADO))
+                    );
+
+                    Propuesta propuesta = new Propuesta(
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_TITULO)),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_PRECIO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_DESCRIPCION))
+                    );
+                    propuesta.setCalificacion(cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.PROPUESTA_CALIFICACION_PROMEDIO)));
+                    propuesta.setTipoServicioNombre(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.TIPO_SERVICIO_NOMBRE)));
+
+                    Usuario trabajador = new Usuario();
+                    trabajador.setNombres(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_NOMBRES)));
+                    trabajador.setApellidos(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_APELLIDOS)));
+                    trabajador.setTelefono(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_TELEFONO)));
+                    trabajador.setCorreo(cursor.getString(cursor.getColumnIndexOrThrow(Conexion.USUARIO_CORREO)));
+
+                    solicitudesDetalle.add(new Object[]{solicitud, propuesta, trabajador});
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e("SolicitudDAO", "Error al obtener solicitudes aceptadas por cliente: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return solicitudesDetalle;
+    }
+
     // Puedes añadir otros métodos como obtenerSolicitudesPorUsuario(), actualizarEstadoSolicitud(), etc.
 }

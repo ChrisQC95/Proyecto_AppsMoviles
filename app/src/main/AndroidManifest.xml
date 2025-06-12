@@ -34,6 +34,7 @@
         <activity android:name=".ListadoPropuestasActivity" />
         <activity android:name=".DetallePropuestaActivity" />
         <activity android:name=".ListadoSolicitudesTrabajadorActivity" />
+        <activity android:name=".ListadoSolicitudesAceptadasActivity" />
     </application>
 
 </manifest>
