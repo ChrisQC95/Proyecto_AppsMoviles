@@ -41,6 +41,7 @@ public class HistorialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HistorialActivity.this, ListadoPropuestasActivity.class);
+                intent.putExtra("ocultar_btn_aceptadas", true); // <-- Nombre correcto del extra
                 startActivity(intent);
             }
         });

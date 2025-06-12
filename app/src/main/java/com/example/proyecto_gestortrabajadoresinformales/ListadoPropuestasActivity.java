@@ -121,6 +121,14 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
                 // No hacer nada
             }
         });
+
+        // Código para ocultar/deshabilitar el botón si corresponde
+        View btnPropuestasAceptadas = findViewById(R.id.btnPropuestasAceptadas);
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra("ocultar_btn_aceptadas", false)) {
+            btnPropuestasAceptadas.setVisibility(View.GONE); // Oculta y deshabilita el botón
+            btnPropuestasAceptadas.setEnabled(false);
+        }
     }
     @Override
     protected void onDestroy() {
@@ -131,7 +139,7 @@ public class ListadoPropuestasActivity extends AppCompatActivity {
             // Por ejemplo, puedes añadir un método en Conexion como adminDB.closeDatabase();
             // o si prefieres, directamente adminDB.getWritableDatabase().close();
             // O mejor aún, haz que adminDB sea un Singleton si tu app lo usa en muchos lugares.
-             // Si Conexion tiene un método close() público que cierra la DB.
+            // Si Conexion tiene un método close() público que cierra la DB.
         }
     }
     private void cargarTiposDeServicioEnSpinner() {
