@@ -45,7 +45,7 @@
             android:textSize="16sp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="8dp"
-            tools:text="Mensaje del cliente: Necesito fontanero urgente para fuga de agua en mi baño. ¿Podrías ayudarme hoy mismo?"/>
+            tools:text="Mensaje: Necesito fontanero urgente para fuga de agua en mi baño. ¿Podrías ayudarme hoy mismo?"/>
 
         <!-- Información del Cliente -->
         <TextView
@@ -64,8 +64,18 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             tools:text="Contacto: 987654321 - juan.perez@example.com"/>
+
+        <!-- Distrito del Cliente (NUEVO) -->
+        <TextView
+            android:id="@+id/tvDistritoClienteItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp"
+            tools:text="Distrito: Santiago de Surco"/>
 
         <!-- Información de la Propuesta (detalles que el cliente está solicitando) -->
         <TextView
@@ -84,7 +94,7 @@
             android:orientation="horizontal"
             android:gravity="end"> <!-- Alinea los botones a la derecha -->
 
-            <!-- Botón Rechazar Solicitud (NUEVO) -->
+            <!-- Botón Rechazar Solicitud -->
             <Button
                 android:id="@+id/btnRechazarSolicitud"
                 android:layout_width="wrap_content"
@@ -97,7 +107,7 @@
                 android:paddingVertical="10dp"
                 android:textSize="16sp"/>
 
-            <!-- Botón Aceptar Solicitud -->
+            <!-- Botón Aceptar Solicitud (cambiará a Finalizar) -->
             <Button
                 android:id="@+id/btnAceptarSolicitud"
                 android:layout_width="wrap_content"

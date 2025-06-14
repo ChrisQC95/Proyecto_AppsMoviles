@@ -12,15 +12,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud; // Importación corregida a beans.Solicitud
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Importación de Propuesta si es usada
-import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario; // Importación de Usuario si es usada
+import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
+import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// Implementa la nueva interfaz OnSolicitudActionListener del adaptador
+// Implementa la interfaz OnSolicitudActionListener del adaptador
 public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity implements SolicitudTrabajadorAdapter.OnSolicitudActionListener {
 
     private RecyclerView recyclerView;
@@ -72,7 +72,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         new Thread(() -> {
             try {
                 int idTrabajador = Integer.parseInt(idUsuarioTrabajadorActual);
-                // Ahora obtiene TODAS las solicitudes del trabajador, no solo las ENVIADAS
+                // Ahora obtiene TODAS las solicitudes del trabajador, sin importar el estado
                 final List<Object[]> nuevasSolicitudes = solicitudDAO.obtenerSolicitudesPorTrabajador(idTrabajador);
 
                 runOnUiThread(() -> {
@@ -107,14 +107,20 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
 
     @Override
     public void onAceptarClick(Solicitud solicitud) {
-        // Usa el método general de confirmación para aceptar
+        // Al aceptar, el estado cambia a 'ACEPTADA'
         mostrarConfirmacion("Aceptar Solicitud", "¿Estás seguro de que quieres aceptar esta solicitud?", solicitud, "ACEPTADA");
     }
 
     @Override
     public void onRechazarClick(Solicitud solicitud) {
-        // Implementación del nuevo método de la interfaz para rechazar
+        // Implementación del método de rechazo
         mostrarConfirmacion("Rechazar Solicitud", "¿Estás seguro de que quieres rechazar esta solicitud?", solicitud, "RECHAZADA");
+    }
+
+    @Override
+    public void onFinalizarClick(Solicitud solicitud) {
+        // Implementación del nuevo método para finalizar
+        mostrarConfirmacion("Finalizar Trabajo", "¿Estás seguro de que quieres marcar este trabajo como finalizado?", solicitud, "FINALIZADA");
     }
 
     // Método general para mostrar la confirmación y actualizar el estado
@@ -154,7 +160,6 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
     protected void onDestroy() {
         super.onDestroy();
         // Cierra la conexión cuando la actividad se destruye.
-        // Si usas el patrón Singleton global, puedes quitar esto.
         if (conexion != null) {
             conexion.close();
         }
@@ -164,7 +169,6 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
     protected void onResume() {
         super.onResume();
         // Recargar solicitudes cada vez que la actividad se vuelve visible
-        // Esto es útil si el estado de las solicitudes puede cambiar desde otras partes de la app
         cargarSolicitudes();
     }
 }

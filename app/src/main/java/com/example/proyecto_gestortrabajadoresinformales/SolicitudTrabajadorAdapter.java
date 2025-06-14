@@ -13,23 +13,21 @@ import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import android.util.Log; // Añadido para Log.e
+import android.util.Log;
 
 public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTrabajadorAdapter.SolicitudViewHolder> {
 
-    private List<Object[]> listaSolicitudes; // Almacenará Solicitud, Propuesta, Usuario
-    private OnSolicitudActionListener listener; // Interfaz para las acciones de Aceptar/Rechazar
+    private List<Object[]> listaSolicitudes;
+    private OnSolicitudActionListener listener;
 
-    // Interfaz para manejar las acciones de Aceptar y Rechazar
     public interface OnSolicitudActionListener {
         void onAceptarClick(Solicitud solicitud);
-        void onRechazarClick(Solicitud solicitud); // Nuevo método para rechazar
+        void onRechazarClick(Solicitud solicitud);
+        void onFinalizarClick(Solicitud solicitud); // Nuevo método para finalizar
     }
 
-    // Constructor que acepta la nueva interfaz
     public SolicitudTrabajadorAdapter(List<Object[]> listaSolicitudes, OnSolicitudActionListener listener) {
         this.listaSolicitudes = listaSolicitudes;
         this.listener = listener;
@@ -49,11 +47,11 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
         Solicitud solicitud = (Solicitud) item[0];
         Propuesta propuesta = (Propuesta) item[1];
         Usuario cliente = (Usuario) item[2];
+        String distritoCliente = (String) item[3]; // Obtener el distrito del cliente
 
-        // Formatear precio de manera segura con DecimalFormat
+        DecimalFormat df = new DecimalFormat("'S/. '#0.00");
         String precioFormateado;
         try {
-            DecimalFormat df = new DecimalFormat("'S/. '#0.00"); // Asegúrate de que el patrón es correcto. Escapar 'S/.'
             precioFormateado = df.format(propuesta.getPrecio());
         } catch (IllegalArgumentException e) {
             Log.e("SolicitudTrabajadorAdapter", "Error de formato DecimalFormat: " + e.getMessage());
@@ -65,14 +63,12 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
         holder.tvMensajeClienteItem.setText("Mensaje: " + solicitud.getMensaje());
         holder.tvInfoClienteItem.setText("Cliente: " + cliente.getNombres() + " " + cliente.getApellidos());
         holder.tvContactoClienteItem.setText("Contacto: " + cliente.getTelefono() + " - " + cliente.getCorreo());
-        // Ajustar el texto de la propuesta, incluyendo el tipo de servicio (si 'tipoServicioNombre' está disponible en Propuesta)
+        holder.tvDistritoClienteItem.setText("Distrito: " + (distritoCliente != null ? distritoCliente : "N/A")); // Asignar el distrito
         holder.tvDetallePropuestaItem.setText("Propuesta: " + (propuesta.getTipoServicioNombre() != null ? propuesta.getTipoServicioNombre() + " - " : "") + propuesta.getDescripcion() + " (" + precioFormateado + ")");
-
 
         // Establecer el texto y color del estado de la solicitud
         String estado = solicitud.getEstado() != null ? solicitud.getEstado().toUpperCase() : "DESCONOCIDO";
         holder.tvEstadoSolicitudItem.setText("Estado: " + estado);
-        // Cambiar color del estado según su valor
         switch (estado) {
             case "ENVIADA":
                 holder.tvEstadoSolicitudItem.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.holo_blue_dark));
@@ -91,33 +87,50 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
                 break;
         }
 
-        // Controlar la visibilidad y funcionalidad de los botones "Aceptar" y "Rechazar"
-        if (solicitud.getEstado().equalsIgnoreCase("ENVIADA")) {
+        // Controlar la visibilidad y funcionalidad de los botones
+        if (estado.equals("ENVIADA")) {
             holder.btnAceptarSolicitud.setVisibility(View.VISIBLE);
             holder.btnAceptarSolicitud.setEnabled(true);
-            holder.btnRechazarSolicitud.setVisibility(View.VISIBLE); // Hacer visible el botón Rechazar
-            holder.btnRechazarSolicitud.setEnabled(true); // Habilitar el botón Rechazar
+            holder.btnAceptarSolicitud.setText("Aceptar"); // Asegura el texto "Aceptar"
+            // Se usa getColorStateList para compatibilidad con versiones antiguas
+            holder.btnAceptarSolicitud.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(R.color.purple_500));
 
-            // Setear listeners
-            holder.btnAceptarSolicitud.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onAceptarClick(solicitud);
-                }
-            });
+            holder.btnRechazarSolicitud.setVisibility(View.VISIBLE);
+            holder.btnRechazarSolicitud.setEnabled(true);
             holder.btnRechazarSolicitud.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onRechazarClick(solicitud);
                 }
             });
-        } else {
-            // Ocultar ambos botones si la solicitud no está en estado "ENVIADA"
+            holder.btnAceptarSolicitud.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onAceptarClick(solicitud);
+                }
+            });
+        } else if (estado.equals("ACEPTADA")) {
+            holder.btnAceptarSolicitud.setVisibility(View.VISIBLE);
+            holder.btnAceptarSolicitud.setEnabled(true);
+            holder.btnAceptarSolicitud.setText("Finalizar"); // Cambiar a "Finalizar"
+            // Nuevo color para el botón "Finalizar"
+            holder.btnAceptarSolicitud.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(android.R.color.holo_orange_dark));
+
+            holder.btnRechazarSolicitud.setVisibility(View.GONE); // Ocultar Rechazar
+            holder.btnRechazarSolicitud.setEnabled(false);
+            holder.btnRechazarSolicitud.setOnClickListener(null);
+
+            holder.btnAceptarSolicitud.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onFinalizarClick(solicitud); // Asignar el listener de Finalizar
+                }
+            });
+        } else { // RECHAZADA o FINALIZADA
             holder.btnAceptarSolicitud.setVisibility(View.GONE);
             holder.btnAceptarSolicitud.setEnabled(false);
-            holder.btnAceptarSolicitud.setOnClickListener(null); // Elimina el listener
+            holder.btnAceptarSolicitud.setOnClickListener(null);
 
-            holder.btnRechazarSolicitud.setVisibility(View.GONE); // Ocultar también el botón Rechazar
+            holder.btnRechazarSolicitud.setVisibility(View.GONE);
             holder.btnRechazarSolicitud.setEnabled(false);
-            holder.btnRechazarSolicitud.setOnClickListener(null); // Elimina el listener
+            holder.btnRechazarSolicitud.setOnClickListener(null);
         }
     }
 
@@ -126,10 +139,9 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
         return listaSolicitudes.size();
     }
 
-    // Método para actualizar la lista de solicitudes
     public void setListaSolicitudes(List<Object[]> nuevaLista) {
         this.listaSolicitudes = nuevaLista;
-        notifyDataSetChanged(); // Notifica al RecyclerView que los datos han cambiado
+        notifyDataSetChanged();
     }
 
     public static class SolicitudViewHolder extends RecyclerView.ViewHolder {
@@ -139,8 +151,9 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
         TextView tvInfoClienteItem;
         TextView tvContactoClienteItem;
         TextView tvDetallePropuestaItem;
+        TextView tvDistritoClienteItem; // Declarar el nuevo TextView para el distrito
         Button btnAceptarSolicitud;
-        Button btnRechazarSolicitud; // Declarar el nuevo botón de rechazar
+        Button btnRechazarSolicitud;
 
         public SolicitudViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,8 +163,9 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
             tvInfoClienteItem = itemView.findViewById(R.id.tvInfoClienteItem);
             tvContactoClienteItem = itemView.findViewById(R.id.tvContactoClienteItem);
             tvDetallePropuestaItem = itemView.findViewById(R.id.tvDetallePropuestaItem);
+            tvDistritoClienteItem = itemView.findViewById(R.id.tvDistritoClienteItem); // Vincular el nuevo TextView
             btnAceptarSolicitud = itemView.findViewById(R.id.btnAceptarSolicitud);
-            btnRechazarSolicitud = itemView.findViewById(R.id.btnRechazarSolicitud); // Vincular el nuevo botón
+            btnRechazarSolicitud = itemView.findViewById(R.id.btnRechazarSolicitud);
         }
     }
 }

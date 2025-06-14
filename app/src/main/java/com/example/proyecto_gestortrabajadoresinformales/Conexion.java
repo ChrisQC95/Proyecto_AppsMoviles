@@ -3,10 +3,14 @@ package com.example.proyecto_gestortrabajadoresinformales;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.content.ContentValues; // Necesario si insertas datos iniciales (distritos, tipos de servicio)
+import android.util.Log; // Necesario para logs
 
 public class Conexion extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mi_app.db";
-    private static final int DATABASE_VERSION = 1;
+    // ¡IMPORTANTE! Incrementa esta versión cada vez que cambies el esquema de la base de datos.
+    // Debe ser MAYOR que la última versión que se instaló en el emulador/dispositivo.
+    private static final int DATABASE_VERSION = 1; // <<-- ¡VERSIÓN DE LA BD INCREMENTADA!
 
     // Constantes para la tabla usuario
     public static final String TABLE_USUARIO = "usuario";
@@ -28,8 +32,6 @@ public class Conexion extends SQLiteOpenHelper {
                     + USUARIO_TIPO + " TEXT NOT NULL CHECK (" + USUARIO_TIPO + " IN ('CLIENTE', 'TRABAJADOR'))"
                     + ")";
 
-
-
     // Constantes para la tabla distrito
     public static final String TABLE_DISTRITO = "distrito";
     public static final String DISTRITO_ID = "id";
@@ -37,7 +39,7 @@ public class Conexion extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_DISTRITO =
             "CREATE TABLE " + TABLE_DISTRITO + "("
                     + DISTRITO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + DISTRITO_NOMBRE + " TEXT NOT NULL"
+                    + DISTRITO_NOMBRE + " TEXT NOT NULL UNIQUE"
                     + ")";
 
     // Constantes para la tabla perfil
@@ -88,7 +90,7 @@ public class Conexion extends SQLiteOpenHelper {
                     + PROPUESTA_DESCRIPCION + " TEXT,"
                     + PROPUESTA_TIPO_SERVICIO_ID + " INTEGER,"
                     + PROPUESTA_DISPONIBILIDAD + " INTEGER DEFAULT 0,"
-                    + PROPUESTA_CALIFICACION_PROMEDIO + " INTEGER DEFAULT 0,"
+                    + PROPUESTA_CALIFICACION_PROMEDIO + " REAL DEFAULT 0.0,"
                     + "FOREIGN KEY (" + PROPUESTA_USUARIO_ID + ") REFERENCES " + TABLE_USUARIO + "(" + USUARIO_ID + "),"
                     + "FOREIGN KEY (" + PROPUESTA_TIPO_SERVICIO_ID + ") REFERENCES " + TABLE_TIPO_SERVICIO + "(" + TIPO_SERVICIO_ID + ")"
                     + ")";
@@ -129,91 +131,75 @@ public class Conexion extends SQLiteOpenHelper {
                     + "FOREIGN KEY (" + CALIFICACION_CLIENTE_ID + ") REFERENCES " + TABLE_USUARIO + "(" + USUARIO_ID + ")"
                     + ")";
 
-    // **** INICIO DE LA ADICIÓN DE CÓDIGO ****
-    // Una sola instancia de SQLiteDatabase para toda la aplicación
-    private SQLiteDatabase databaseInstance;
-
-    // Constructor
     public Conexion(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // Sobrescribir getWritableDatabase para gestionar la instancia
-    @Override
-    public synchronized SQLiteDatabase getWritableDatabase() {
-        if (databaseInstance == null || !databaseInstance.isOpen()) {
-            databaseInstance = super.getWritableDatabase();
-        }
-        return databaseInstance;
-    }
-
-    // Sobrescribir getReadableDatabase para gestionar la instancia
-    @Override
-    public synchronized SQLiteDatabase getReadableDatabase() {
-        if (databaseInstance == null || !databaseInstance.isOpen()) {
-            databaseInstance = super.getReadableDatabase();
-        }
-        return databaseInstance;
-    }
-
-    // Método para cerrar la base de datos de forma segura
-    @Override
-    public synchronized void close() {
-        if (databaseInstance != null && databaseInstance.isOpen()) {
-            databaseInstance.close();
-            databaseInstance = null; // Limpiar la referencia
-        }
-        super.close(); // Llama al método close() de la clase padre
-    }
-    // **** FIN DE LA ADICIÓN DE CÓDIGO ****
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Ejecuta las sentencias CREATE TABLE aquí
         db.execSQL(CREATE_TABLE_USUARIO);
         db.execSQL(CREATE_TABLE_DISTRITO);
-        // Insertar distritos por defecto
-        String[] distritos = {
-                "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Cercado de Lima", "Chaclacayo", "Chorrillos",
-                "Cieneguilla", "Comas", "El agustino", "Independencia", "Jesús maría", "La molina", "La victoria",
-                "Lince", "Los olivos", "Lurigancho", "Lurín", "Magdalena del mar", "Miraflores", "Pachacámac",
-                "Pucusana", "Pueblo libre", "Puente piedra", "Punta hermosa", "Punta negra", "Rímac", "San bartolo",
-                "San borja", "San isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis",
-                "San Martin de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa",
-                "Santiago de Surco", "Surquillo", "Villa el Salvador", "Villa Maria del Triunfo"
-        };
-
-        for (String nombre : distritos) {
-            db.execSQL("INSERT INTO " + TABLE_DISTRITO + " (" + DISTRITO_NOMBRE + ") VALUES ('" + nombre + "')");
-        }
         db.execSQL(CREATE_TABLE_PERFIL);
         db.execSQL(CREATE_TABLE_TIPO_SERVICIO);
-        // Insertar tipos de servicio por defecto
-        String[] tiposServicio = {
-                "Fontanería", "Pintura", "Electricidad", "Carpintería", "Gasfitería",
-                "Jardinería", "Limpieza", "Cerrajería", "Albañilería", "Otros"
-        };
-
-        for (String servicio : tiposServicio) {
-            db.execSQL("INSERT INTO " + TABLE_TIPO_SERVICIO + " (" + TIPO_SERVICIO_NOMBRE + ") VALUES ('" + servicio + "')");
-        }
         db.execSQL(CREATE_TABLE_PROPUESTA);
         db.execSQL(CREATE_TABLE_SOLICITUD);
         db.execSQL(CREATE_TABLE_CALIFICACION);
+        Log.d("Conexion", "Todas las tablas creadas.");
+
+        // Insertar distritos por defecto
+        insertarDistritosIniciales(db);
+        // Insertar tipos de servicio por defecto
+        insertarTiposServicioIniciales(db);
+        // NOTA: Se eliminó la llamada a insertarUsuarioPrueba(db) aquí
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Lógica para actualizar la base de datos si cambia la versión
-        // Por ejemplo, podrías eliminar las tablas antiguas y volver a crearlas
+        Log.w("Conexion", "Actualizando base de datos de la versión " + oldVersion + " a " + newVersion + ". Esto eliminará los datos existentes.");
+        // Elimina las tablas en el orden correcto para evitar problemas de FK
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CALIFICACION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOLICITUD);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROPUESTA);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TIPO_SERVICIO);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERFIL);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRITO);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TIPO_SERVICIO);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USUARIO);
-        onCreate(db);
+
+        onCreate(db); // Recrea todas las tablas con el nuevo esquema y vuelve a insertar datos iniciales
+        Log.d("Conexion", "Tablas recreadas durante la actualización.");
     }
 
+    // Métodos para insertar datos iniciales (útiles para pruebas y datos estáticos)
+    private void insertarDistritosIniciales(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        String[] distritos = {
+                "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Cercado de Lima", "Chaclacayo", "Chorrillos",
+                "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", "La Victoria",
+                "Lince", "Los Olivos", "Lurigancho", "Lurín", "Magdalena del Mar", "Miraflores", "Pachacámac",
+                "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", "Punta Negra", "Rímac", "San Bartolo",
+                "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis",
+                "San Martín de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa",
+                "Santiago de Surco", "Surquillo", "Villa El Salvador", "Villa María del Triunfo"
+        };
+        for (String nombre : distritos) {
+            values.clear(); // Limpiar valores anteriores
+            values.put(DISTRITO_NOMBRE, nombre);
+            db.insert(TABLE_DISTRITO, null, values);
+        }
+        Log.d("Conexion", "Distritos iniciales insertados.");
+    }
+
+    private void insertarTiposServicioIniciales(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        String[] tiposServicio = {
+                "Fontanería", "Pintura", "Electricidad", "Carpintería", "Gasfitería",
+                "Jardinería", "Limpieza", "Cerrajería", "Albañilería", "Otros"
+        };
+        for (String servicio : tiposServicio) {
+            values.clear(); // Limpiar valores anteriores
+            values.put(TIPO_SERVICIO_NOMBRE, servicio);
+            db.insert(TABLE_TIPO_SERVICIO, null, values);
+        }
+        Log.d("Conexion", "Tipos de servicio iniciales insertados.");
+    }
 }

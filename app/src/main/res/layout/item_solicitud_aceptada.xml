@@ -16,59 +16,139 @@
 
         <!-- Título de la Solicitud (Basado en la Propuesta) -->
         <TextView
-            android:id="@+id/tvTituloSolicitudItem"
+            android:id="@+id/tvTituloSolicitudItemCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:layout_marginBottom="4dp"
-            tools:text="Solicitud para Reparación de Tuberías"/>
+            tools:text="Solicitud Aceptada para Reparación de Tuberías"/>
 
-        <!-- Mensaje del Cliente -->
+        <!-- Mensaje de la Solicitud -->
         <TextView
-            android:id="@+id/tvMensajeClienteItem"
+            android:id="@+id/tvMensajeSolicitudCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="8dp"
-            tools:text="Mensaje del cliente: Necesito fontanero urgente para fuga de agua en mi baño. ¿Podrías ayudarme hoy mismo?"/>
+            tools:text="Mensaje de la solicitud: '¡Fuga de agua en el baño!'" />
 
-        <!-- Información del Cliente -->
+        <!-- Información del Trabajador -->
         <TextView
-            android:id="@+id/tvInfoClienteItem"
+            android:id="@+id/tvInfoTrabajadorCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
+            android:textStyle="bold"
             android:textColor="@android:color/black"
             android:layout_marginBottom="4dp"
-            tools:text="Cliente: Juan Pérez"/>
+            tools:text="Trabajador: Pedro García"/>
 
         <TextView
-            android:id="@+id/tvContactoClienteItem"
+            android:id="@+id/tvContactoTrabajadorCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textColor="@android:color/black"
             android:layout_marginBottom="8dp"
-            tools:text="Contacto: 987654321 - juan.perez@example.com"/>
+            tools:text="Contacto: 987654321 - pedro.garcia@example.com"/>
 
-        <!-- Información de la Propuesta (detalles que el cliente está solicitando) -->
+        <!-- Información de la Propuesta -->
         <TextView
-            android:id="@+id/tvDetallePropuestaItem"
+            android:id="@+id/tvDetallePropuestaCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             tools:text="Propuesta: Fontanería - Reparación General (S/ 150.00)"/>
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            app:srcCompat="@drawable/whatsapp" />
+        <!-- Contenedor para el icono de WhatsApp - Alineado a la derecha -->
+        <!-- Este LinearLayout se ocultará cuando la solicitud esté 'FINALIZADA' -->
+        <LinearLayout
+            android:id="@+id/layoutWhatsapp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contactar por WhatsApp:"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"/>
+
+            <ImageView
+                android:id="@+id/ivWhatsappClienteContacto"
+                android:layout_width="48dp"  android:layout_height="48dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                app:srcCompat="@drawable/whatsapp"
+                android:contentDescription="Iniciar chat de WhatsApp con el trabajador"
+                tools:ignore="VectorDrawableCompat" />
+        </LinearLayout>
+
+        <!-- Sección de Calificación - Se mostrará cuando la solicitud esté 'FINALIZADA' -->
+        <LinearLayout
+            android:id="@+id/layoutCalificacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Califica el servicio:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <RatingBar
+                android:id="@+id/ratingBarServicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1.0"
+                android:rating="0"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etComentarioCalificacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Deja un comentario (opcional)"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:gravity="top|start"
+                android:padding="8dp"
+                android:background="@android:drawable/editbox_background"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnGuardarCalificacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar Calificación"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="12dp"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
