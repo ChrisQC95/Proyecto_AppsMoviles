@@ -18,6 +18,7 @@ import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud; // Nec
 import com.example.proyecto_gestortrabajadoresinformales.consultas.DistritoDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.PerfilDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO; // Necesitarás crear esta clase
+import com.example.proyecto_gestortrabajadoresinformales.consultas.TipoServicioDAO;
 
 import java.text.DecimalFormat;
 
@@ -33,6 +34,8 @@ public class DetallePropuestaActivity extends AppCompatActivity {
     private Conexion conexion;
     private PerfilDAO perfilDAO;
     private DistritoDAO distritoDAO;
+
+    private TipoServicioDAO tipoServicioDAO;
     private SolicitudDAO solicitudDAO; // Lo usaremos en el siguiente paso
 
     private String idUsuarioClienteActual; // CAMBIADO a String
@@ -57,6 +60,7 @@ public class DetallePropuestaActivity extends AppCompatActivity {
         // Inicializar DAOs pasándoles la instancia de Conexion
         perfilDAO = new PerfilDAO(conexion);
         distritoDAO = new DistritoDAO(conexion);
+        tipoServicioDAO = new TipoServicioDAO(conexion);
         // SolicitudDAO todavía no existe, lo crearemos en el siguiente paso.
         // Lo inicializamos aquí para que esté disponible en hacerSolicitudDeTrabajo()
         solicitudDAO = new SolicitudDAO(conexion);
@@ -96,6 +100,7 @@ public class DetallePropuestaActivity extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat("S/. '#0.00'");
         tvPrecioPropuesta.setText(df.format(propuestaSeleccionada.getPrecio()));
 
+        propuestaSeleccionada.setTipoServicioNombre(tipoServicioDAO.obtenerTipoServicioPorId(propuestaSeleccionada.getTipo_servicio().toString()).getNombre());
         // Cargar el nombre del tipo de servicio (ya lo tienes en Propuesta bean)
         if (propuestaSeleccionada.getTipoServicioNombre() != null && !propuestaSeleccionada.getTipoServicioNombre().isEmpty()) {
             tvOficioPropuesta.setText(propuestaSeleccionada.getTipoServicioNombre());
