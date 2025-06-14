@@ -9,6 +9,8 @@ import com.example.proyecto_gestortrabajadoresinformales.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
 import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Importar Propuesta para el JOIN
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio; // Asegúrate de importar TipoServicio
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +29,8 @@ public class SolicitudDAO {
         values.put(Conexion.SOLICITUD_USUARIO_ID, solicitud.getUsuarioId());
         values.put(Conexion.SOLICITUD_PROPUESTA_ID, solicitud.getPropuestaId());
         values.put(Conexion.SOLICITUD_MENSAJE, solicitud.getMensaje());
-        // SOLICITUD_ESTADO tiene un valor por defecto en la tabla, no es necesario pasarlo explícitamente aquí.
-        // Si quisieras controlarlo, lo harías aquí: values.put(Conexion.SOLICITUD_ESTADO, solicitud.getEstado());
+        // El estado por defecto se establece en la DB, pero puedes enviarlo si lo deseas
+        // values.put(Conexion.SOLICITUD_ESTADO, solicitud.getEstado()); // Si quieres establecerlo desde el bean
 
         long idInsertado = -1;
         try {
@@ -53,13 +55,13 @@ public class SolicitudDAO {
         Cursor cursor = null;
 
         // Consulta SQL para unir solicitudes con propuestas y usuarios (clientes)
-        // Solo obtener solicitudes con estado 'ENVIADA'
+        // Se ha ELIMINADO el filtro por estado 'ENVIADA'
         String query = "SELECT " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ID + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + ", " + // ID del cliente
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_MENSAJE + ", " +
-                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + ", " +
+                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + ", " + // Asegúrate de seleccionar el ESTADO
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TITULO + ", " +
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_PRECIO + ", " +
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_DESCRIPCION + ", " +
@@ -79,8 +81,7 @@ public class SolicitudDAO {
                 "INNER JOIN " + Conexion.TABLE_TIPO_SERVICIO + " ON " + // JOIN con tipo_servicio
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TIPO_SERVICIO_ID + " = " +
                 Conexion.TABLE_TIPO_SERVICIO + "." + Conexion.TIPO_SERVICIO_ID + " " +
-                "WHERE " + Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_USUARIO_ID + " = ? " +
-                "AND " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + " = 'ENVIADA'"; // Solo solicitudes enviadas
+                "WHERE " + Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_USUARIO_ID + " = ?"; // Solo filtra por el ID del trabajador
 
         try {
             cursor = db.rawQuery(query, new String[]{String.valueOf(idTrabajador)});

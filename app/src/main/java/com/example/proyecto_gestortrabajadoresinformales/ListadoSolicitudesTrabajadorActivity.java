@@ -12,15 +12,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
-import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
-import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud; // Importación corregida a beans.Solicitud
+import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Importación de Propuesta si es usada
+import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario; // Importación de Usuario si es usada
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity implements SolicitudTrabajadorAdapter.OnAceptarClickListener {
+// Implementa la nueva interfaz OnSolicitudActionListener del adaptador
+public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity implements SolicitudTrabajadorAdapter.OnSolicitudActionListener {
 
     private RecyclerView recyclerView;
     private SolicitudTrabajadorAdapter adapter;
@@ -54,6 +55,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         }
 
         listaSolicitudes = new ArrayList<>();
+        // Pasa 'this' como listener de la nueva interfaz OnSolicitudActionListener
         adapter = new SolicitudTrabajadorAdapter(listaSolicitudes, this);
         recyclerView.setAdapter(adapter);
 
@@ -70,6 +72,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         new Thread(() -> {
             try {
                 int idTrabajador = Integer.parseInt(idUsuarioTrabajadorActual);
+                // Ahora obtiene TODAS las solicitudes del trabajador, no solo las ENVIADAS
                 final List<Object[]> nuevasSolicitudes = solicitudDAO.obtenerSolicitudesPorTrabajador(idTrabajador);
 
                 runOnUiThread(() -> {
@@ -81,7 +84,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
                         Log.d("ListadoSolicitudes", "Solicitudes cargadas: " + nuevasSolicitudes.size());
                     } else {
                         tvNoSolicitudes.setVisibility(View.VISIBLE);
-                        Log.d("ListadoSolicitudes", "No hay solicitudes pendientes para este trabajador.");
+                        Log.d("ListadoSolicitudes", "No hay solicitudes para este trabajador.");
                     }
                 });
             } catch (NumberFormatException e) {
@@ -104,20 +107,27 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
 
     @Override
     public void onAceptarClick(Solicitud solicitud) {
-        // Lógica para aceptar la solicitud
-        mostrarConfirmacionAceptar(solicitud);
+        // Usa el método general de confirmación para aceptar
+        mostrarConfirmacion("Aceptar Solicitud", "¿Estás seguro de que quieres aceptar esta solicitud?", solicitud, "ACEPTADA");
     }
 
-    private void mostrarConfirmacionAceptar(Solicitud solicitud) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirmar Aceptar Solicitud");
-        builder.setMessage("¿Estás seguro de que quieres aceptar esta solicitud de " + solicitud.getMensaje() + "?");
+    @Override
+    public void onRechazarClick(Solicitud solicitud) {
+        // Implementación del nuevo método de la interfaz para rechazar
+        mostrarConfirmacion("Rechazar Solicitud", "¿Estás seguro de que quieres rechazar esta solicitud?", solicitud, "RECHAZADA");
+    }
 
-        builder.setPositiveButton("Aceptar", (dialog, which) -> {
-            aceptarSolicitud(solicitud);
+    // Método general para mostrar la confirmación y actualizar el estado
+    private void mostrarConfirmacion(String titulo, String mensaje, Solicitud solicitud, String nuevoEstado) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(titulo);
+        builder.setMessage(mensaje + "\n\nPropuesta: " + solicitud.getMensaje()); // Mostrar mensaje de la solicitud para contexto
+
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            actualizarEstadoSolicitud(solicitud, nuevoEstado);
         });
 
-        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+        builder.setNegativeButton("No", (dialog, which) -> {
             dialog.dismiss();
         });
 
@@ -125,16 +135,16 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         dialog.show();
     }
 
-    private void aceptarSolicitud(Solicitud solicitud) {
+    private void actualizarEstadoSolicitud(Solicitud solicitud, String nuevoEstado) {
         new Thread(() -> {
-            boolean exito = solicitudDAO.actualizarEstadoSolicitud(solicitud.getId(), "ACEPTADA");
+            boolean exito = solicitudDAO.actualizarEstadoSolicitud(solicitud.getId(), nuevoEstado);
             runOnUiThread(() -> {
                 if (exito) {
-                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Solicitud aceptada con éxito.", Toast.LENGTH_SHORT).show();
-                    // Recargar la lista para que la solicitud desaparezca (ya que filtra por 'ENVIADA')
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Solicitud " + nuevoEstado.toLowerCase() + " con éxito.", Toast.LENGTH_SHORT).show();
+                    // Recargar la lista para que el estado se actualice en la UI
                     cargarSolicitudes();
                 } else {
-                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Error al aceptar la solicitud.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Error al " + nuevoEstado.toLowerCase() + " la solicitud.", Toast.LENGTH_SHORT).show();
                 }
             });
         }).start();
