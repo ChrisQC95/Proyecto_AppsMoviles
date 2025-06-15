@@ -1,6 +1,7 @@
 package com.example.proyecto_gestortrabajadoresinformales; // Ajusta el paquete si es necesario
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,15 +13,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
 import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// Implementa la interfaz OnSolicitudActionListener del adaptador
 public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity implements SolicitudTrabajadorAdapter.OnSolicitudActionListener {
 
     private RecyclerView recyclerView;
@@ -35,7 +36,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listado_solicitudes_trabajador); // Tu layout principal para esta actividad
+        setContentView(R.layout.listado_solicitudes_trabajador);
 
         tvNoSolicitudes = findViewById(R.id.tvNoSolicitudes);
         recyclerView = findViewById(R.id.recyclerViewSolicitudesTrabajador);
@@ -55,11 +56,19 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         }
 
         listaSolicitudes = new ArrayList<>();
-        // Pasa 'this' como listener de la nueva interfaz OnSolicitudActionListener
-        adapter = new SolicitudTrabajadorAdapter(listaSolicitudes, this);
+        adapter = new SolicitudTrabajadorAdapter(
+                listaSolicitudes,
+                this // OnSolicitudActionListener (implementado por la Activity)
+        );
         recyclerView.setAdapter(adapter);
 
         cargarSolicitudes(); // Cargar las solicitudes al iniciar la actividad
+
+        FloatingActionButton fabCalificacion = findViewById(R.id.fabCalificacion);
+        fabCalificacion.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListadoCalificacionesTrabajadorActivity.class);
+            startActivity(intent);
+        });
     }
 
     private String obtenerIdUsuarioTrabajadorActual() {
@@ -72,19 +81,24 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         new Thread(() -> {
             try {
                 int idTrabajador = Integer.parseInt(idUsuarioTrabajadorActual);
-                // Ahora obtiene TODAS las solicitudes del trabajador, sin importar el estado
                 final List<Object[]> nuevasSolicitudes = solicitudDAO.obtenerSolicitudesPorTrabajador(idTrabajador);
 
                 runOnUiThread(() -> {
                     if (nuevasSolicitudes != null && !nuevasSolicitudes.isEmpty()) {
                         listaSolicitudes.clear(); // Limpia la lista existente
-                        listaSolicitudes.addAll(nuevasSolicitudes); // Añade las nuevas solicitudes
+                        for (Object[] solicitud : nuevasSolicitudes) {
+                            Solicitud solicitudObj = (Solicitud) solicitud[0];
+                            // Filtrar solicitudes con estado ENVIADA o ACEPTADA
+                            if ("ENVIADA".equals(solicitudObj.getEstado()) || "ACEPTADA".equals(solicitudObj.getEstado())) {
+                                listaSolicitudes.add(solicitud);
+                            }
+                        }
                         adapter.notifyDataSetChanged(); // Notifica al adapter
                         tvNoSolicitudes.setVisibility(View.GONE);
-                        Log.d("ListadoSolicitudes", "Solicitudes cargadas: " + nuevasSolicitudes.size());
+                        Log.d("ListadoSolicitudes", "Solicitudes cargadas: " + listaSolicitudes.size());
                     } else {
                         tvNoSolicitudes.setVisibility(View.VISIBLE);
-                        Log.d("ListadoSolicitudes", "No hay solicitudes para este trabajador.");
+                        Log.d("ListadoSolicitudes", "No hay solicitudes pendientes para este trabajador.");
                     }
                 });
             } catch (NumberFormatException e) {
@@ -107,33 +121,20 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
 
     @Override
     public void onAceptarClick(Solicitud solicitud) {
-        // Al aceptar, el estado cambia a 'ACEPTADA'
-        mostrarConfirmacion("Aceptar Solicitud", "¿Estás seguro de que quieres aceptar esta solicitud?", solicitud, "ACEPTADA");
+        // Lógica para aceptar la solicitud
+        mostrarConfirmacionAceptar(solicitud);
     }
 
-    @Override
-    public void onRechazarClick(Solicitud solicitud) {
-        // Implementación del método de rechazo
-        mostrarConfirmacion("Rechazar Solicitud", "¿Estás seguro de que quieres rechazar esta solicitud?", solicitud, "RECHAZADA");
-    }
-
-    @Override
-    public void onFinalizarClick(Solicitud solicitud) {
-        // Implementación del nuevo método para finalizar
-        mostrarConfirmacion("Finalizar Trabajo", "¿Estás seguro de que quieres marcar este trabajo como finalizado?", solicitud, "FINALIZADA");
-    }
-
-    // Método general para mostrar la confirmación y actualizar el estado
-    private void mostrarConfirmacion(String titulo, String mensaje, Solicitud solicitud, String nuevoEstado) {
+    private void mostrarConfirmacionAceptar(Solicitud solicitud) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(titulo);
-        builder.setMessage(mensaje + "\n\nPropuesta: " + solicitud.getMensaje()); // Mostrar mensaje de la solicitud para contexto
+        builder.setTitle("Confirmar Aceptar Solicitud");
+        builder.setMessage("¿Estás seguro de que quieres aceptar esta solicitud de " + solicitud.getMensaje() + "?");
 
-        builder.setPositiveButton("Sí", (dialog, which) -> {
-            actualizarEstadoSolicitud(solicitud, nuevoEstado);
+        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+            aceptarSolicitud(solicitud);
         });
 
-        builder.setNegativeButton("No", (dialog, which) -> {
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
             dialog.dismiss();
         });
 
@@ -141,16 +142,16 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
         dialog.show();
     }
 
-    private void actualizarEstadoSolicitud(Solicitud solicitud, String nuevoEstado) {
+    private void aceptarSolicitud(Solicitud solicitud) {
         new Thread(() -> {
-            boolean exito = solicitudDAO.actualizarEstadoSolicitud(solicitud.getId(), nuevoEstado);
+            boolean exito = solicitudDAO.actualizarEstadoSolicitud(solicitud.getId(), "ACEPTADA");
             runOnUiThread(() -> {
                 if (exito) {
-                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Solicitud " + nuevoEstado.toLowerCase() + " con éxito.", Toast.LENGTH_SHORT).show();
-                    // Recargar la lista para que el estado se actualice en la UI
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Solicitud aceptada con éxito.", Toast.LENGTH_SHORT).show();
+                    // Recargar la lista para que la solicitud desaparezca (ya que filtra por 'ENVIADA')
                     cargarSolicitudes();
                 } else {
-                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Error al " + nuevoEstado.toLowerCase() + " la solicitud.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Error al aceptar la solicitud.", Toast.LENGTH_SHORT).show();
                 }
             });
         }).start();
@@ -160,6 +161,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
     protected void onDestroy() {
         super.onDestroy();
         // Cierra la conexión cuando la actividad se destruye.
+        // Si usas el patrón Singleton global, puedes quitar esto.
         if (conexion != null) {
             conexion.close();
         }
@@ -169,6 +171,59 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
     protected void onResume() {
         super.onResume();
         // Recargar solicitudes cada vez que la actividad se vuelve visible
+        // Esto es útil si el estado de las solicitudes puede cambiar desde otras partes de la app
         cargarSolicitudes();
+    }
+
+    private void mostrarConfirmacionFinalizar(Solicitud solicitud) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmar Finalizar Solicitud");
+        builder.setMessage("¿Estás seguro de que quieres finalizar esta solicitud?");
+
+        builder.setPositiveButton("Finalizar", (dialog, which) -> {
+            finalizarSolicitud(solicitud);
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void finalizarSolicitud(Solicitud solicitud) {
+        new Thread(() -> {
+            boolean exito = solicitudDAO.actualizarEstadoSolicitud(solicitud.getId(), "FINALIZADA");
+            runOnUiThread(() -> {
+                if (exito) {
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Solicitud finalizada con éxito.", Toast.LENGTH_SHORT).show();
+                    cargarSolicitudes();
+                } else {
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Error al finalizar la solicitud.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
+    }
+
+    // Ejemplo de método para obtener el id del trabajador (ajusta según tu lógica real)
+    private int obtenerIdTrabajadorActual() {
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String id = sharedPref.getString("user_id", "-1");
+        try {
+            return Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public void onFinalizarClick(Solicitud solicitud) {
+        mostrarConfirmacionFinalizar(solicitud);
+    }
+
+    @Override
+    public void onRechazarClick(Solicitud solicitud) {
+        // Puedes dejarlo vacío si no lo usas, pero debe estar implementado
     }
 }
