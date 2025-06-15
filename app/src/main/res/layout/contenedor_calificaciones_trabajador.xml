@@ -1,41 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".ListadoSolicitudesAceptadasActivity">
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/tvTituloSolicitudes"
+        android:id="@+id/tvTituloListado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Solicitudes de Trabajo Aceptadas"
-        android:textSize="24sp"
+        android:text="Calificaciones Recibidas"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="12dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewSolicitudesAceptadas"
+        android:id="@+id/recyclerViewCalificaciones"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_solicitud_aceptada">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/listado_calificaciones_trabajador" />
 
     <TextView
-        android:id="@+id/tvNoSolicitudesAceptadas"
+        android:id="@+id/tvSinCalificaciones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No tienes solicitudes de trabajo aceptadas."
+        android:text="No tienes calificaciones aún."
         android:textSize="16sp"
         android:textColor="@android:color/darker_gray"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="24dp"
         android:visibility="gone"
         tools:visibility="visible" />
 

@@ -314,7 +314,8 @@ public class SolicitudDAO {
                 Conexion.TABLE_CALIFICACION + "." + Conexion.CALIFICACION_SOLICITUD_ID + " " +
                 "WHERE " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + " = ? " +
                 "AND (" + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + " = 'ACEPTADA' " +
-                "OR " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + " = 'FINALIZADA')"; // Incluye solicitudes finalizadas
+                "OR " + Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + " = 'FINALIZADA') " +
+                "AND " + Conexion.TABLE_CALIFICACION + "." + Conexion.CALIFICACION_ID + " IS NULL";
 
         try {
             cursor = db.rawQuery(query, new String[]{String.valueOf(idCliente)});
