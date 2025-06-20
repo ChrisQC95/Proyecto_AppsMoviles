@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales; // Asegúrate de que el paquete sea correcto
+package com.example.proyecto_gestortrabajadoresinformales.beans; // Asegúrate de que el paquete sea correcto
 
 import android.os.Parcel;
 import android.os.Parcelable;

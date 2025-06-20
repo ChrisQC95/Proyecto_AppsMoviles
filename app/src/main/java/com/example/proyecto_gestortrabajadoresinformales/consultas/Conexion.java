@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.consultas;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -107,7 +107,6 @@ public class Conexion extends SQLiteOpenHelper {
                     + SOLICITUD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + SOLICITUD_USUARIO_ID + " INTEGER NOT NULL,"
                     + SOLICITUD_PROPUESTA_ID + " INTEGER NOT NULL,"
-                    + SOLICITUD_MENSAJE + " TEXT,"
                     + SOLICITUD_ESTADO + " TEXT DEFAULT 'ENVIADA' CHECK (" + SOLICITUD_ESTADO + " IN ('ENVIADA', 'ACEPTADA', 'RECHAZADA', 'FINALIZADA')),"
                     + "FOREIGN KEY (" + SOLICITUD_USUARIO_ID + ") REFERENCES " + TABLE_USUARIO + "(" + USUARIO_ID + "),"
                     + "FOREIGN KEY (" + SOLICITUD_PROPUESTA_ID + ") REFERENCES " + TABLE_PROPUESTA + "(" + PROPUESTA_ID + ")"

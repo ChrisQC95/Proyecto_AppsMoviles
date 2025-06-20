@@ -1,19 +1,20 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Distrito;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Perfil;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.DistritoDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.PerfilDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
@@ -21,12 +22,20 @@ import com.bumptech.glide.Glide;
 import android.widget.ImageView;
 
 import java.util.List;
-public class PerfilTrabajadorActivity extends AppCompatActivity{
+
+public class PerfilClienteActivity extends AppCompatActivity {
+    private Conexion conexion;
+
+    // Declara el DAO a nivel de clase
+    private DistritoDAO distritoDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.datos_perfil_trabajador);
+        setContentView(R.layout.datos_perfil_cliente);
+        conexion = new Conexion(this);
 
+        // CAMBIO AQUI: Inicializa PropuestaDAO pasándole la instancia de 'conexion'
+        distritoDAO = new DistritoDAO(conexion);
         String usuarioId = getIntent().getStringExtra("usuarioId");
 
         if (usuarioId != null) {
@@ -40,7 +49,6 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
             EditText txtCorreo = findViewById(R.id.txtCorreo);
             Spinner spnDistrito = findViewById(R.id.spnDistrito);
             EditText txtImagen = findViewById(R.id.txtImagen);
-            EditText txtEspecialidad = findViewById(R.id.txtEspecialidad);
 
             DistritoDAO distritoDAO = new DistritoDAO(conexion);
             List<Distrito> listaDistritos = distritoDAO.obtenerTodosLosDistritos();
@@ -66,7 +74,6 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
 
             if (perfil != null) {
                 txtImagen.setText(perfil.getFotoPerfil());
-                txtEspecialidad.setText(perfil.getEspecialidad());
 
                 // Mostrar imagen con Glide
                 String urlImagen = perfil.getFotoPerfil();
@@ -111,12 +118,10 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
 
                 String distritoId = obtenerIdDelSpinner(spnDistrito);
                 String imagen = txtImagen.getText().toString();
-                String especialidad = txtEspecialidad.getText().toString();
 
                 // Actualizamos perfil sin verificaciones
                 perfil.setDistritoId(distritoId);
                 perfil.setFotoPerfil(imagen);
-                perfil.setEspecialidad(especialidad);
 
                 perfilDAO.actualizarPerfil(perfil);
 
@@ -133,11 +138,10 @@ public class PerfilTrabajadorActivity extends AppCompatActivity{
 
                 Toast.makeText(this, "Perfil guardado correctamente", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(PerfilTrabajadorActivity.this, TrabajadorInicioActivity.class);
-                intent.putExtra("usuarioId", usuarioId);
+                Intent intent = new Intent(PerfilClienteActivity.this, ClienteInicioActivity.class);
+                intent.putExtra("usuarioId", usuarioId); // ← importante
                 startActivity(intent);
             });
-
         }
 
     }

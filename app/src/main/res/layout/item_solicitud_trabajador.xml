@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,14 +39,6 @@
             tools:text="Estado: ENVIADA"/>
 
         <!-- Mensaje del Cliente -->
-        <TextView
-            android:id="@+id/tvMensajeClienteItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginBottom="8dp"
-            tools:text="Mensaje: Necesito fontanero urgente para fuga de agua en mi baño. ¿Podrías ayudarme hoy mismo?"/>
 
         <!-- Información del Cliente -->
         <TextView

@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.trabajador;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.proyecto_gestortrabajadoresinformales.R;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Calificacion;
+
 import java.util.List;
 
 public class CalificacionAdapter extends RecyclerView.Adapter<CalificacionAdapter.ViewHolder> {

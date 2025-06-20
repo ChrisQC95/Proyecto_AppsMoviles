@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
 
 public class ClienteInicioActivity extends AppCompatActivity {

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.proyecto_gestortrabajadoresinformales.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Perfil;
 
 public class PerfilDAO {

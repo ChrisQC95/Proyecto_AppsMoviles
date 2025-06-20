@@ -5,11 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.proyecto_gestortrabajadoresinformales.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Importación corregida a beans.Propuesta
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta; // Importación corregida a beans.Propuesta
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
-import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,6 @@ public class SolicitudDAO {
 
         values.put(Conexion.SOLICITUD_USUARIO_ID, solicitud.getUsuarioId());
         values.put(Conexion.SOLICITUD_PROPUESTA_ID, solicitud.getPropuestaId());
-        values.put(Conexion.SOLICITUD_MENSAJE, solicitud.getMensaje());
         //values.put(Conexion.SOLICITUD_ESTADO, solicitud.getEstado()); // Asegurarse de guardar el estado inicial
         if (solicitud.getEstado() != null) {
             values.put(Conexion.SOLICITUD_ESTADO, solicitud.getEstado());
@@ -69,7 +66,6 @@ public class SolicitudDAO {
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ID + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + ", " +
-                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_MENSAJE + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + ", " +
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TITULO + ", " +
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_PRECIO + ", " +
@@ -108,7 +104,6 @@ public class SolicitudDAO {
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_USUARIO_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_PROPUESTA_ID)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_MENSAJE)),
                             cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ESTADO))
                     );
 
@@ -190,7 +185,6 @@ public class SolicitudDAO {
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ID + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_USUARIO_ID + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_PROPUESTA_ID + ", " +
-                Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_MENSAJE + ", " +
                 Conexion.TABLE_SOLICITUD + "." + Conexion.SOLICITUD_ESTADO + ", " +
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_TITULO + ", " +
                 Conexion.TABLE_PROPUESTA + "." + Conexion.PROPUESTA_PRECIO + ", " +
@@ -230,7 +224,6 @@ public class SolicitudDAO {
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_USUARIO_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_PROPUESTA_ID)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_MENSAJE)),
                             cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ESTADO))
                     );
 
@@ -326,7 +319,6 @@ public class SolicitudDAO {
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_USUARIO_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_PROPUESTA_ID)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_MENSAJE)),
                             cursor.getString(cursor.getColumnIndexOrThrow(Conexion.SOLICITUD_ESTADO))
                     );
 
@@ -388,6 +380,24 @@ public class SolicitudDAO {
             idInsertado = db.insert(Conexion.TABLE_CALIFICACION, null, values);
             if (idInsertado != -1) {
                 Log.d("SolicitudDAO", "Calificación insertada con ID: " + idInsertado + " para solicitud: " + solicitudId);
+
+                // 🔁 NUEVO: Obtener el ID de la propuesta relacionada
+                int propuestaId = -1;
+                Cursor cursor = db.rawQuery("SELECT propuesta_id FROM solicitud WHERE id = ?",
+                        new String[]{String.valueOf(solicitudId)});
+                if (cursor.moveToFirst()) {
+                    propuestaId = cursor.getInt(0);
+                }
+                cursor.close();
+
+                // 🔁 NUEVO: Actualizar promedio de calificaciones en la tabla propuesta
+                if (propuestaId != -1) {
+                    PropuestaDAO propuestaDAO = new PropuestaDAO(conexion);
+                    propuestaDAO.actualizarCalificacionPromedio(propuestaId);
+                    Log.d("SolicitudDAO", "Promedio de calificación actualizado para propuesta: " + propuestaId);
+                }
+
+
             } else {
                 Log.e("SolicitudDAO", "Error al insertar la calificación en la base de datos.");
             }

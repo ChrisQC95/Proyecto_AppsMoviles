@@ -4,26 +4,23 @@ public class Solicitud {
     private Integer id; // AUTOINCREMENT, puede ser null al insertar
     private Integer usuarioId; // ID del cliente que hace la solicitud
     private Integer propuestaId; // ID de la propuesta a la que se hace la solicitud
-    private String mensaje;
     private String estado; // Por defecto 'ENVIADA'
 
     public Solicitud() {
     }
 
     // Constructor para insertar una nueva solicitud
-    public Solicitud(Integer usuarioId, Integer propuestaId, String mensaje) {
+    public Solicitud(Integer usuarioId, Integer propuestaId) {
         this.usuarioId = usuarioId;
         this.propuestaId = propuestaId;
-        this.mensaje = mensaje;
         // El estado por defecto se establece en la DB, no es necesario pasarlo aquí.
     }
 
     // Constructor completo (por ejemplo, para cargar desde la DB)
-    public Solicitud(Integer id, Integer usuarioId, Integer propuestaId, String mensaje, String estado) {
+    public Solicitud(Integer id, Integer usuarioId, Integer propuestaId, String estado) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.propuestaId = propuestaId;
-        this.mensaje = mensaje;
         this.estado = estado;
     }
 
@@ -50,14 +47,6 @@ public class Solicitud {
 
     public void setPropuestaId(Integer propuestaId) {
         this.propuestaId = propuestaId;
-    }
-
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
     }
 
     public String getEstado() {

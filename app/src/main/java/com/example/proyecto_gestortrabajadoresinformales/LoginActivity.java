@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.*;
 
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.cliente.ClienteInicioActivity;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
+import com.example.proyecto_gestortrabajadoresinformales.trabajador.TrabajadorInicioActivity;
 
 public class LoginActivity extends AppCompatActivity {
 

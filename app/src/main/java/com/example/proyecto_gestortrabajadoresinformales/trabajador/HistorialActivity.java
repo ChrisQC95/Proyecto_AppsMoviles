@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.trabajador;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
-import com.example.proyecto_gestortrabajadoresinformales.PropuestaDAO;
 import com.example.proyecto_gestortrabajadoresinformales.R;
-import com.example.proyecto_gestortrabajadoresinformales.PropuestaActivity;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.PropuestaDAO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class HistorialActivity extends AppCompatActivity {
 
     private TableLayout tableLayout;
     private String usuarioId;
-    private FloatingActionButton fabVerListadoPropuestas;
+    private FloatingActionButton fabCrearPropuesta;
     private Conexion conexion;
 
     // Declara el DAO a nivel de clase
@@ -34,14 +34,14 @@ public class HistorialActivity extends AppCompatActivity {
         propuestaDAO = new PropuestaDAO(conexion);
         tableLayout = findViewById(R.id.dynamic_table);
         usuarioId = getIntent().getStringExtra("usuarioId");
-        fabVerListadoPropuestas = findViewById(R.id.fabVerListadoPropuestas);
+        fabCrearPropuesta = findViewById(R.id.fabVerListadoPropuestas);
 
         cargarPropuestas();
-        fabVerListadoPropuestas.setOnClickListener(new View.OnClickListener() {
+        fabCrearPropuesta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HistorialActivity.this, ListadoPropuestasActivity.class);
-                intent.putExtra("ocultar_btn_aceptadas", true); // <-- Nombre correcto del extra
+                Intent intent = new Intent(HistorialActivity.this, PropuestaActivity.class);
+                intent.putExtra("usuarioId", usuarioId);
                 startActivity(intent);
             }
         });

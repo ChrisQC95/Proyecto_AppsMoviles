@@ -2,14 +2,17 @@ package com.example.proyecto_gestortrabajadoresinformales;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Patterns;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.proyecto_gestortrabajadoresinformales.beans.Perfil;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.cliente.PerfilClienteActivity;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.PerfilDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
+import com.example.proyecto_gestortrabajadoresinformales.trabajador.PerfilTrabajadorActivity;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -43,36 +46,72 @@ public class RegistroActivity extends AppCompatActivity {
         spnTipoUsuario.setAdapter(adapter);
 
         // Botón de registro
-        btnRegistro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registrarUsuario();
-            }
-        });
+        btnRegistro.setOnClickListener(v -> registrarUsuario());
 
         // Redirigir a Login
-        lblLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegistroActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
+        lblLogin.setOnClickListener(v -> {
+            startActivity(new Intent(RegistroActivity.this, LoginActivity.class));
+            finish();
         });
     }
 
+    private boolean validarCampos() {
+
+        //  Nombres y apellidos – mínimo 2 caracteres
+        if (txtNombres.getText().toString().trim().length() < 3) {
+            txtNombres.setError("Ingrese sus nombres (mín. 3 caracteres)");
+            txtNombres.requestFocus();
+            return false;
+        }
+
+        if (txtApellidos.getText().toString().trim().length() < 3) {
+            txtApellidos.setError("Ingrese sus apellidos (mín. 3 caracteres)");
+            txtApellidos.requestFocus();
+            return false;
+        }
+
+        // Teléfono – solo dígitos y 9 caracteres (Perú)
+        String telefono = txtTelefono.getText().toString().trim();
+        if (!telefono.matches("\\d{9}")) {
+            txtTelefono.setError("Teléfono debe tener 9 dígitos");
+            txtTelefono.requestFocus();
+            return false;
+        }
+
+        // Correo – patrón estándar de Android
+        String correo = txtCorreo.getText().toString().trim();
+        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            txtCorreo.setError("Correo electrónico inválido");
+            txtCorreo.requestFocus();
+            return false;
+        }
+
+        // Contraseña – mínimo 6 caracteres con al menos 1 letra y 1 número
+        String contrasena = txtContrasena.getText().toString().trim();
+        if (!contrasena.matches("^(?=.*[A-Za-z])(?=.*\\d).{6,}$")) {
+            txtContrasena.setError("Al menos 6 caracteres, 1 letra y 1 número");
+            txtContrasena.requestFocus();
+            return false;
+        }
+
+        // Tipo de usuario – no permitir la opción por defecto “Seleccione…”
+        if (spnTipoUsuario.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Seleccione el tipo de usuario", Toast.LENGTH_SHORT).show();
+            spnTipoUsuario.performClick();
+            return false;
+        }
+        return true;
+    }
+
     private void registrarUsuario() {
+        if (!validarCampos()) return;
+
         String nombres = txtNombres.getText().toString().trim();
         String apellidos = txtApellidos.getText().toString().trim();
         String telefono = txtTelefono.getText().toString().trim();
         String correo = txtCorreo.getText().toString().trim();
         String contrasena = txtContrasena.getText().toString().trim();
         String tipoUsuario = spnTipoUsuario.getSelectedItem().toString();
-
-        if (nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() ||
-                correo.isEmpty() || contrasena.isEmpty()) {
-            Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         Usuario usuario = new Usuario(nombres, apellidos, telefono, correo, contrasena, tipoUsuario);
         Conexion conexion = new Conexion(this);

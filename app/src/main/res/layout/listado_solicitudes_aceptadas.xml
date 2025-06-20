@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ListadoSolicitudesAceptadasActivity">
+    android:background="#FFFFFF"
+    tools:context=".cliente.ListadoSolicitudesAceptadasActivity">
 
     <TextView
         android:id="@+id/tvTituloSolicitudes"

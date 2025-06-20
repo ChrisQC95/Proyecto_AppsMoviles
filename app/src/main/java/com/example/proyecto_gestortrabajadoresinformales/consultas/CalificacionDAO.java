@@ -1,6 +1,9 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.consultas;
 
 import android.database.Cursor;
+
+import com.example.proyecto_gestortrabajadoresinformales.beans.Calificacion;
+
 import java.util.ArrayList;
 import java.util.List;
 

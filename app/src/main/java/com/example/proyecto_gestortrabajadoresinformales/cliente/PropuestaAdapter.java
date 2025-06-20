@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales; // Ajusta el paquete
+package com.example.proyecto_gestortrabajadoresinformales.cliente; // Ajusta el paquete
 
 import static java.lang.String.valueOf;
 
@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Ajusta el paquete si lo pusiste en 'model'
+import com.example.proyecto_gestortrabajadoresinformales.R;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta; // Ajusta el paquete si lo pusiste en 'model'
 import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
 
 public class PropuestaAdapter extends RecyclerView.Adapter<PropuestaAdapter.PropuestaViewHolder> {

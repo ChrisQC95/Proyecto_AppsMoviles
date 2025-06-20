@@ -24,18 +24,18 @@
         </activity>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegistroActivity"/>
-        <activity android:name=".ClienteInicioActivity" />
-        <activity android:name=".TrabajadorInicioActivity" />
+        <activity android:name=".cliente.ClienteInicioActivity" />
+        <activity android:name=".trabajador.TrabajadorInicioActivity" />
         <activity android:name=".RestablecerActivity" />
-        <activity android:name=".PropuestaActivity" />
-        <activity android:name=".HistorialActivity" />
-        <activity android:name=".PerfilTrabajadorActivity" />
-        <activity android:name=".PerfilClienteActivity" />
-        <activity android:name=".ListadoPropuestasActivity" />
-        <activity android:name=".DetallePropuestaActivity" />
-        <activity android:name=".ListadoSolicitudesTrabajadorActivity" />
-        <activity android:name=".ListadoSolicitudesAceptadasActivity" />
-        <activity android:name=".ListadoCalificacionesTrabajadorActivity" />
+        <activity android:name=".trabajador.PropuestaActivity" />
+        <activity android:name=".trabajador.HistorialActivity" />
+        <activity android:name=".trabajador.PerfilTrabajadorActivity" />
+        <activity android:name=".cliente.PerfilClienteActivity" />
+        <activity android:name=".cliente.ListadoPropuestasActivity" />
+        <activity android:name=".cliente.DetallePropuestaActivity" />
+        <activity android:name=".trabajador.ListadoSolicitudesTrabajadorActivity" />
+        <activity android:name=".cliente.ListadoSolicitudesAceptadasActivity" />
+        <activity android:name=".trabajador.ListadoCalificacionesTrabajadorActivity" />
     </application>
 
 </manifest>

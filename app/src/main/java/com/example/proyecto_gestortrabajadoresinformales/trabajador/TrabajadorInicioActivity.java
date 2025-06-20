@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.trabajador;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
 
 public class TrabajadorInicioActivity extends AppCompatActivity {
@@ -29,7 +31,7 @@ public class TrabajadorInicioActivity extends AppCompatActivity {
 
         Button btnCrearPropuesta = findViewById(R.id.btnCrearPropuesta);
         btnCrearPropuesta.setOnClickListener(v -> {
-            Intent intent = new Intent(TrabajadorInicioActivity.this, PropuestaActivity.class);
+            Intent intent = new Intent(TrabajadorInicioActivity.this, HistorialActivity.class);
             intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
         });

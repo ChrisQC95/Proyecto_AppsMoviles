@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.cliente;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta; // Importación corregida a beans.Propuesta
-import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.R;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO;
 
 import java.util.ArrayList;

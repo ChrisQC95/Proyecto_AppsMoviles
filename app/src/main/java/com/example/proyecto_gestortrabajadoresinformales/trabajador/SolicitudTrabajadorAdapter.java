@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales; // Ajusta el paquete si es necesario
+package com.example.proyecto_gestortrabajadoresinformales.trabajador; // Ajusta el paquete si es necesario
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
 
 import java.text.DecimalFormat;
@@ -60,7 +61,6 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
 
         // Asignar datos a las vistas
         holder.tvTituloSolicitudItem.setText(propuesta.getTitulo());
-        holder.tvMensajeClienteItem.setText("Mensaje: " + solicitud.getMensaje());
         holder.tvInfoClienteItem.setText("Cliente: " + cliente.getNombres() + " " + cliente.getApellidos());
         holder.tvContactoClienteItem.setText("Contacto: " + cliente.getTelefono() + " - " + cliente.getCorreo());
         holder.tvDistritoClienteItem.setText("Distrito: " + (distritoCliente != null ? distritoCliente : "N/A")); // Asignar el distrito
@@ -159,7 +159,7 @@ public class SolicitudTrabajadorAdapter extends RecyclerView.Adapter<SolicitudTr
             super(itemView);
             tvTituloSolicitudItem = itemView.findViewById(R.id.tvTituloSolicitudItem);
             tvEstadoSolicitudItem = itemView.findViewById(R.id.tvEstadoSolicitudItem);
-            tvMensajeClienteItem = itemView.findViewById(R.id.tvMensajeClienteItem);
+
             tvInfoClienteItem = itemView.findViewById(R.id.tvInfoClienteItem);
             tvContactoClienteItem = itemView.findViewById(R.id.tvContactoClienteItem);
             tvDetallePropuestaItem = itemView.findViewById(R.id.tvDetallePropuestaItem);

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
 
     <TextView
         android:id="@+id/txtBienvenida"
@@ -44,7 +45,7 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:text="Ir a Crear Propuesta de Trabajo"
+        android:text="Mis Propuestas de Trabajo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +55,7 @@
         android:id="@+id/btnPerfil"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:text="Continuar editando perfil"
+        android:text="Mi Perfil"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales; // Ajusta el paquete
+package com.example.proyecto_gestortrabajadoresinformales.cliente; // Ajusta el paquete
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,9 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.content.Intent;
+
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Distrito;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.DistritoDAO;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.PropuestaDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.TipoServicioDAO;
 
 import java.util.ArrayList;

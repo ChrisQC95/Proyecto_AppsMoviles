@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.UsuarioDAO;
 
 import java.util.Properties;
@@ -52,12 +52,24 @@ public class RestablecerActivity extends AppCompatActivity {
 
         btnEnviarContrasena.setOnClickListener(v -> {
             String correoDestinatario = editTextCorreo.getText().toString().trim();
-            if (!correoDestinatario.isEmpty()) {
-                lblMensaje.setText("");
-                new ObtenerYEnviarContrasenaTask().execute(correoDestinatario);
-            } else {
-                lblMensaje.setText("Por favor, ingresa tu correo electrónico.");
+
+            // Limpiar errores previos
+            editTextCorreo.setError(null);
+            lblMensaje.setText("");
+
+            if (correoDestinatario.isEmpty()) {
+                editTextCorreo.setError("Por favor, ingresa tu correo electrónico.");
+                editTextCorreo.requestFocus();
+                return;
             }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correoDestinatario).matches()) {
+                editTextCorreo.setError("Correo inválido. Ej: usuario@dominio.com");
+                editTextCorreo.requestFocus();
+                return;
+            }
+
+            new ObtenerYEnviarContrasenaTask().execute(correoDestinatario);
         });
 
         lblLogin.setOnClickListener(v -> {

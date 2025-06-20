@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.trabajador;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.proyecto_gestortrabajadoresinformales.R;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Calificacion;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.CalificacionDAO;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
+
 import java.util.List;
 
 public class ListadoCalificacionesTrabajadorActivity extends AppCompatActivity {

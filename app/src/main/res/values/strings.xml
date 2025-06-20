@@ -2,6 +2,7 @@
     <string name="app_name">Proyecto-GestorTrabajadoresInformales</string>
 
     <string-array name="tipos_usuario">
+        <item>Seleccione el tipo</item>
         <item>CLIENTE</item>
         <item>TRABAJADOR</item>
     </string-array>

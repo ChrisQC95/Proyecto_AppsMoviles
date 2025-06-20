@@ -1,10 +1,8 @@
 package com.example.proyecto_gestortrabajadoresinformales.consultas;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.proyecto_gestortrabajadoresinformales.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Distrito;
 
 import java.util.ArrayList;

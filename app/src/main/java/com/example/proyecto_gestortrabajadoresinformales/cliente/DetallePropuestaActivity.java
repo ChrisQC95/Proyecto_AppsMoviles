@@ -1,9 +1,8 @@
-package com.example.proyecto_gestortrabajadoresinformales; // Asegúrate de que el paquete sea correcto
+package com.example.proyecto_gestortrabajadoresinformales.cliente; // Asegúrate de que el paquete sea correcto
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,13 +10,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Distrito;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Perfil;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud; // Necesitarás crear esta clase
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.DistritoDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.PerfilDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO; // Necesitarás crear esta clase
+import com.example.proyecto_gestortrabajadoresinformales.consultas.TipoServicioDAO;
 
 import java.text.DecimalFormat;
 
@@ -32,6 +34,8 @@ public class DetallePropuestaActivity extends AppCompatActivity {
 
     private Conexion conexion;
     private PerfilDAO perfilDAO;
+
+    private TipoServicioDAO tipoServicioDAO;
     private DistritoDAO distritoDAO;
     private SolicitudDAO solicitudDAO; // Lo usaremos en el siguiente paso
 
@@ -57,6 +61,7 @@ public class DetallePropuestaActivity extends AppCompatActivity {
         // Inicializar DAOs pasándoles la instancia de Conexion
         perfilDAO = new PerfilDAO(conexion);
         distritoDAO = new DistritoDAO(conexion);
+        tipoServicioDAO = new TipoServicioDAO(conexion);
         // SolicitudDAO todavía no existe, lo crearemos en el siguiente paso.
         // Lo inicializamos aquí para que esté disponible en hacerSolicitudDeTrabajo()
         solicitudDAO = new SolicitudDAO(conexion);
@@ -96,6 +101,7 @@ public class DetallePropuestaActivity extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat("S/. ");
         tvPrecioPropuesta.setText(df.format(propuestaSeleccionada.getPrecio()));
 
+        propuestaSeleccionada.setTipoServicioNombre(tipoServicioDAO.obtenerTipoServicioPorId(propuestaSeleccionada.getTipo_servicio().toString()).getNombre());
         // Cargar el nombre del tipo de servicio (ya lo tienes en Propuesta bean)
         if (propuestaSeleccionada.getTipoServicioNombre() != null && !propuestaSeleccionada.getTipoServicioNombre().isEmpty()) {
             tvOficioPropuesta.setText(propuestaSeleccionada.getTipoServicioNombre());
@@ -163,8 +169,7 @@ public class DetallePropuestaActivity extends AppCompatActivity {
                 // Asumiendo que los IDs en la DB son INTEGER:
                 Solicitud solicitud = new Solicitud(
                         Integer.parseInt(idUsuarioClienteActual), // Convertir a Integer
-                        propuestaSeleccionada.getId(), // Ya es Integer
-                        "" // Mensaje vacío por ahora
+                        propuestaSeleccionada.getId()
                 );
 
                 long idSolicitudInsertada = solicitudDAO.insertarSolicitud(solicitud);

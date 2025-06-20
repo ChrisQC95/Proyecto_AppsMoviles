@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#FFFFFF"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
@@ -26,14 +27,6 @@
             tools:text="Solicitud Aceptada para Reparación de Tuberías"/>
 
         <!-- Mensaje de la Solicitud -->
-        <TextView
-            android:id="@+id/tvMensajeSolicitudCliente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginBottom="8dp"
-            tools:text="Mensaje de la solicitud: '¡Fuga de agua en el baño!'" />
 
         <!-- Información del Trabajador -->
         <TextView

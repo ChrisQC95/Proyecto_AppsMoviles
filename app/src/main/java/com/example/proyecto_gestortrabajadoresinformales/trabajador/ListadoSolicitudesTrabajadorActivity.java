@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales; // Ajusta el paquete si es necesario
+package com.example.proyecto_gestortrabajadoresinformales.trabajador; // Ajusta el paquete si es necesario
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +13,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_gestortrabajadoresinformales.Propuesta;
+import com.example.proyecto_gestortrabajadoresinformales.R;
 import com.example.proyecto_gestortrabajadoresinformales.beans.Solicitud;
-import com.example.proyecto_gestortrabajadoresinformales.beans.Usuario;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.SolicitudDAO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -128,7 +128,7 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
     private void mostrarConfirmacionAceptar(Solicitud solicitud) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirmar Aceptar Solicitud");
-        builder.setMessage("¿Estás seguro de que quieres aceptar esta solicitud de " + solicitud.getMensaje() + "?");
+        builder.setMessage("¿Estás seguro de que quieres aceptar esta solicitud?");
 
         builder.setPositiveButton("Aceptar", (dialog, which) -> {
             aceptarSolicitud(solicitud);
@@ -224,6 +224,37 @@ public class ListadoSolicitudesTrabajadorActivity extends AppCompatActivity impl
 
     @Override
     public void onRechazarClick(Solicitud solicitud) {
-        // Puedes dejarlo vacío si no lo usas, pero debe estar implementado
+        mostrarConfirmacionRechazar(solicitud);
+    }
+
+    private void mostrarConfirmacionRechazar(Solicitud solicitud) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmar Rechazo de Solicitud");
+        builder.setMessage("¿Estás seguro de que quieres rechazar esta solicitud?");
+
+        builder.setPositiveButton("Rechazar", (dialog, which) -> {
+            rechazarSolicitud(solicitud);
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void rechazarSolicitud(Solicitud solicitud) {
+        new Thread(() -> {
+            boolean exito = solicitudDAO.actualizarEstadoSolicitud(solicitud.getId(), "RECHAZADA");
+            runOnUiThread(() -> {
+                if (exito) {
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Solicitud rechazada correctamente.", Toast.LENGTH_SHORT).show();
+                    cargarSolicitudes(); // Recargar la lista para que desaparezca
+                } else {
+                    Toast.makeText(ListadoSolicitudesTrabajadorActivity.this, "Error al rechazar la solicitud.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
     }
 }

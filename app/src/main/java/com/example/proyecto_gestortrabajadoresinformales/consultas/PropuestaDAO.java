@@ -1,9 +1,10 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.consultas;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -250,5 +251,34 @@ public class PropuestaDAO {
         long resultado = db.update(Conexion.TABLE_PROPUESTA, values, whereClause, whereArgs);
         db.close();
         return resultado;
+    }
+
+    public void actualizarCalificacionPromedio(int propuestaId) {
+        SQLiteDatabase db = adminDB.getWritableDatabase();
+        Cursor c = null;
+        try {
+            // 1) Calcular el promedio sobre todas las calificaciones de ESTA propuesta
+            String avgSql =
+                    "SELECT AVG(c.puntuacion) " +
+                            "FROM calificacion c " +
+                            "JOIN solicitud s ON c.solicitud_id = s.id " +
+                            "WHERE s.propuesta_id = ?";
+            c = db.rawQuery(avgSql, new String[]{String.valueOf(propuestaId)});
+
+            if (c.moveToFirst()) {
+                double promedio = c.isNull(0) ? 0 : c.getDouble(0);
+
+                // 2) Actualizar la columna calificacion_promedio
+                ContentValues values = new ContentValues();
+                values.put(Conexion.PROPUESTA_CALIFICACION_PROMEDIO, promedio);
+                db.update(Conexion.TABLE_PROPUESTA,
+                        values,
+                        Conexion.PROPUESTA_ID + " = ?",
+                        new String[]{String.valueOf(propuestaId)});
+            }
+        } finally {
+            if (c != null) c.close();
+            // No cierres db si todavía vas a usarla en otros métodos
+        }
     }
 }

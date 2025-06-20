@@ -1,4 +1,4 @@
-package com.example.proyecto_gestortrabajadoresinformales;
+package com.example.proyecto_gestortrabajadoresinformales.trabajador;
 
 import android.content.Intent;
 import android.content.SharedPreferences; // Importar SharedPreferences para obtener el ID del usuario
@@ -9,7 +9,11 @@ import android.widget.*; // Importar todos los widgets necesarios
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.proyecto_gestortrabajadoresinformales.R;
+import com.example.proyecto_gestortrabajadoresinformales.beans.Propuesta;
 import com.example.proyecto_gestortrabajadoresinformales.beans.TipoServicio;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.Conexion;
+import com.example.proyecto_gestortrabajadoresinformales.consultas.PropuestaDAO;
 import com.example.proyecto_gestortrabajadoresinformales.consultas.TipoServicioDAO;
 
 import java.util.ArrayList;
@@ -85,7 +89,7 @@ public class PropuestaActivity extends AppCompatActivity {
                 cargarDatosPropuesta(); // Cargar datos si estamos en modo edición
             } else {
                 Toast.makeText(this, "Error: ID de propuesta para edición no válido.", Toast.LENGTH_SHORT).show();
-                modoEdicion = false; // Forzar a modo creación si ID inválido
+                modoEdicion = false;
             }
         }
 
@@ -99,9 +103,9 @@ public class PropuestaActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("PropuestaActivity", "Botón 'Ver Solicitudes' clickeado.");
                 if (!idTrabajador.equals("-1")) { // Solo si el ID del trabajador es válido
-                    Intent intent = new Intent(PropuestaActivity.this, ListadoSolicitudesTrabajadorActivity.class);
-                    // No necesitamos pasar el ID del trabajador por Intent si ListadoSolicitudesTrabajadorActivity
-                    // ya lo obtiene de SharedPreferences.
+                    Intent intent = new Intent(PropuestaActivity.this,
+                            ListadoSolicitudesTrabajadorActivity.class);
+                    intent.putExtra("propuestaId", propuestaId);   // <‑‑ AQUÍ
                     startActivity(intent);
                 } else {
                     Toast.makeText(PropuestaActivity.this, "Inicie sesión como trabajador para ver las solicitudes.", Toast.LENGTH_SHORT).show();
